@@ -3,7 +3,7 @@ public class BST_Node<T extends Comparable<T>> {
     private BST_Node right_child;
     private BST_Node parent;
     private final T data;
-    private final IBST_Key<T> key;
+    private IBST_Key<T> key;
 
     public BST_Node(IBST_Key<T> key, T data) {
         this.data = data;
@@ -42,5 +42,9 @@ public class BST_Node<T extends Comparable<T>> {
     }
     public IBST_Key<T> getKey() {
         return key;
+    }
+
+    public void setKey(IBST_Key<T> key) {
+        this.key = key;
     }
 }
