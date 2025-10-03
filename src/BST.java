@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class BST<T extends Comparable<T>> {
-    private BST_Node<T> root;
+    BST_Node<T> root;
 
     public BST() {
         this.root = null;
@@ -119,5 +119,23 @@ public class BST<T extends Comparable<T>> {
 
     public BST_Node<T> getRoot() {
         return root;
+    }
+
+    public ArrayList<BST_Node<T>> inOrder() {
+        ArrayList<BST_Node<T>> result = new ArrayList<>();
+        Stack<BST_Node<T>> stack = new Stack<>();
+        BST_Node<T> current = this.root;
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.getLeft_child();
+            }
+            if (!stack.isEmpty()) {
+                current = stack.pop();
+                result.add(current);
+                current = current.getRight_child();
+            }
+        }
+        return result;
     }
 }
