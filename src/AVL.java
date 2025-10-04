@@ -1,4 +1,4 @@
-public class AVL<T extends Comparable<T>> extends BST<T> {
+public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);

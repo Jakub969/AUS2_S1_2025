@@ -1,3 +1,3 @@
-public interface IBST_Key<T extends Comparable<T>> {
+public interface IBST_Key<T> {
     int compareTo(IBST_Key object);
 }

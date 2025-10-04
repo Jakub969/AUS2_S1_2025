@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class BST<T extends Comparable<T>> {
+public class BST<T extends IBST_Key<T>> {
     BST_Node<T> root;
 
     public BST() {

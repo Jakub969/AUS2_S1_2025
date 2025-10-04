@@ -1,4 +1,4 @@
-public class AVL_Node<T extends Comparable<T>> extends BST_Node<T> {
+public class AVL_Node<T extends IBST_Key<T>> extends BST_Node<T> {
     private int height;
 
     public AVL_Node(IBST_Key<T> key, T data) {
