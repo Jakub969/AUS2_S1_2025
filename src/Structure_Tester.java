@@ -11,27 +11,22 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         this.random = new Random(seed);
     }
 
-    // ======== INSERT ==========
     public void operationInsert(int num_elements) {
         System.out.println("\n--- Test INSERT (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
 
         for (int i = 0; i < num_elements; i++) {
             T key = (T) new GenerateData(random.nextInt(num_elements * 10));
-            BST_Node<T> node = new BST_Node<>(key, key);
+            AVL_Node<T> node = new AVL_Node<>(key, key);
             helper.add(node);
             structure.insert(node);
         }
-
         long end = System.currentTimeMillis();
         System.out.println("Čas vkladania: " + (end - start) + " ms");
-
-        // kontrola počtu
         int countBST = countNodes();
         System.out.println("Počet prvkov - BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
     }
 
-    // ======== DELETE ==========
     public void operationDelete(int num_elements) {
         System.out.println("\n--- Test DELETE (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
@@ -51,7 +46,6 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("Počet prvkov - BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
     }
 
-    // ======== SEARCH ==========
     public void operationSearch(int num_elements) {
         System.out.println("\n--- Test SEARCH (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
@@ -66,7 +60,6 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("Čas hľadania: " + (end - start) + " ms");
     }
 
-    // ======== RANGE SEARCH ==========
     public void operationRangeSearch(int num_operations) {
         System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operácií) ---");
         long start = System.currentTimeMillis();
@@ -82,7 +75,6 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("Čas intervalového hľadania: " + (end - start) + " ms");
     }
 
-    // ======== MIN & MAX ==========
     public void operationFindMin(int num_ops) {
         System.out.println("\n--- Test FIND MIN (" + num_ops + " operácií) ---");
         long start = System.currentTimeMillis();
@@ -103,7 +95,6 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("Čas findMax: " + (end - start) + " ms");
     }
 
-    // ======== Pomocné metódy ==========
     private int countNodes() {
         return this.structure.inOrder().size();
     }

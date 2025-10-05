@@ -1,3 +1,3 @@
 public interface IBST_Key<T> {
-    int compareTo(IBST_Key object);
+    int compareTo(IBST_Key<T> object);
 }
