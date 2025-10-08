@@ -37,6 +37,23 @@ public class BST<T extends IBST_Key<T>> {
         }
     }
 
+    public BST_Node<T> search(IBST_Key<T> key) {
+        BST_Node<T> current = this.root;
+        while (current != null) {
+            int compareResult = key.compareTo(current.getKey());
+            if (compareResult == 0) {
+                return current;
+            } else if (compareResult == -1) {
+                current = current.getLeft_child();
+            } else if (compareResult == 1) {
+                current = current.getRight_child();
+            } else {
+                throw new IllegalArgumentException("Key comparison failed.");
+            }
+        }
+        return null;
+    }
+
     public ArrayList<BST_Node<T>> rangeSearch(IBST_Key<T> low, IBST_Key<T> high) {
         BST_Node<T> current = this.root;
         ArrayList<BST_Node<T>> result = new ArrayList<>();

@@ -19,14 +19,18 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
 
             // 4 prípady
             if (balance > 1) {
+                //LR
                 if (getBalance((AVL_Node<T>) node.getLeft_child()) < 0) {
                     node.setLeft_child(rotateLeft((AVL_Node<T>) node.getLeft_child()));
                 }
+                //RR
                 node = (AVL_Node<T>) rotateRight(node);
             } else if (balance < -1) {
+                //RL
                 if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
                     node.setRight_child(rotateRight((AVL_Node<T>) node.getRight_child()));
                 }
+                //LL
                 node = (AVL_Node<T>) rotateLeft(node);
             }
 
@@ -40,14 +44,26 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     }
 
     private void updateHeight(AVL_Node<T> node) {
-        int leftH = (node.getLeft_child() == null) ? 0 : ((AVL_Node<T>) node.getLeft_child()).getHeight();
-        int rightH = (node.getRight_child() == null) ? 0 : ((AVL_Node<T>) node.getRight_child()).getHeight();
+        int leftH = 0;
+        int rightH = 0;
+        if (node.getLeft_child() != null) {
+            leftH = ((AVL_Node<T>) node.getLeft_child()).getHeight();
+        }
+        if (node.getRight_child() != null) {
+            rightH = ((AVL_Node<T>) node.getRight_child()).getHeight();
+        }
         node.setHeight(Math.max(leftH, rightH) + 1);
     }
 
     private int getBalance(AVL_Node<T> node) {
-        int leftH = (node.getLeft_child() == null) ? 0 : ((AVL_Node<T>) node.getLeft_child()).getHeight();
-        int rightH = (node.getRight_child() == null) ? 0 : ((AVL_Node<T>) node.getRight_child()).getHeight();
+        int leftH = 0;
+        int rightH = 0;
+        if (node.getLeft_child() != null) {
+            leftH = ((AVL_Node<T>) node.getLeft_child()).getHeight();
+        }
+        if (node.getRight_child() != null) {
+            rightH = ((AVL_Node<T>) node.getRight_child()).getHeight();
+        }
         return leftH - rightH;
     }
 
@@ -58,8 +74,13 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         x.setRight_child(y);
         y.setLeft_child(T2);
 
-        if (T2 != null) T2.setParent(y);
+        return fixRotationLinks(y, x, T2);
+    }
 
+    private BST_Node<T> fixRotationLinks(AVL_Node<T> y, AVL_Node<T> x, AVL_Node<T> t2) {
+        if (t2 != null) {
+            t2.setParent(y);
+        }
         x.setParent(y.getParent());
         if (y.getParent() == null) {
             super.root = x;
@@ -83,21 +104,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         y.setLeft_child(x);
         x.setRight_child(T2);
 
-        if (T2 != null) T2.setParent(x);
-
-        y.setParent(x.getParent());
-        if (x.getParent() == null) {
-            super.root = y;
-        } else if (x.getParent().getLeft_child() == x) {
-            x.getParent().setLeft_child(y);
-        } else {
-            x.getParent().setRight_child(y);
-        }
-        x.setParent(y);
-
-        updateHeight(x);
-        updateHeight(y);
-
-        return y;
+        return fixRotationLinks(x, y, T2);
     }
 }
