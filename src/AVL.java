@@ -2,17 +2,17 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
-        rebalance((AVL_Node<T>) node);
+        rebalance((AVL_Node<T>) node, true);
     }
 
     @Override
     public void delete(BST_Node<T> node) {
         BST_Node<T> parent = node.getParent();
         super.delete(node);
-        rebalance((AVL_Node<T>) parent);
+        rebalance((AVL_Node<T>) parent, false);
     }
 
-    private void rebalance(AVL_Node<T> node) {
+    private void rebalance(AVL_Node<T> node, boolean isInsert) {
         while (node != null) {
             updateHeight(node);
             int balance = getBalance(node);
@@ -25,6 +25,9 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //RR
                 node = (AVL_Node<T>) rotateRight(node);
+                if (isInsert) {
+                    break;
+                }
             } else if (balance < -1) {
                 //RL
                 if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
@@ -32,6 +35,11 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //LL
                 node = (AVL_Node<T>) rotateLeft(node);
+                if (isInsert) {
+                    break;
+                }
+            } else if (isInsert && balance == 0 && node.getHeight() > 1) {
+                break;
             }
 
             if (node.getParent() == null) {
