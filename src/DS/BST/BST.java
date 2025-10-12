@@ -1,8 +1,11 @@
+package DS.BST;
+
+import Interface.IBST_Key;
 import java.util.ArrayList;
 import java.util.Stack;
 
 public class BST<T extends IBST_Key<T>> {
-    BST_Node<T> root;
+    protected BST_Node<T> root;
 
     public BST() {
         this.root = null;
@@ -169,5 +172,27 @@ public class BST<T extends IBST_Key<T>> {
             }
         }
         return result;
+    }
+
+    public BST_Node<T> getMin() {
+        if (this.root == null) {
+            return null;
+        }
+        BST_Node<T> current = this.root;
+        while (current.getLeft_child() != null) {
+            current = current.getLeft_child();
+        }
+        return current;
+    }
+
+    public BST_Node<T> getMax() {
+        if (this.root == null) {
+            return null;
+        }
+        BST_Node<T> current = this.root;
+        while (current.getRight_child() != null) {
+            current = current.getRight_child();
+        }
+        return current;
     }
 }

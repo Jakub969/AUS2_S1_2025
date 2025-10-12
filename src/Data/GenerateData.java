@@ -1,4 +1,8 @@
-public class GenerateData implements IBST_Key<GenerateData>{
+package Data;
+
+import Interface.IBST_Key;
+
+public class GenerateData implements IBST_Key<GenerateData> {
     private final int integer;
 
     public GenerateData(int integer) {
@@ -14,7 +18,7 @@ public class GenerateData implements IBST_Key<GenerateData>{
         if (object instanceof GenerateData other) {
             return Integer.compare(this.integer, other.integer);
         } else {
-            throw new IllegalArgumentException("Object is not GenerateData type.");
+            throw new IllegalArgumentException("Object is not Data.GenerateData type.");
         }
     }
 }

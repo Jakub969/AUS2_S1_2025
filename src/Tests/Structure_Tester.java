@@ -1,3 +1,11 @@
+package Tests;
+
+import DS.AVL.AVL_Node;
+import DS.BST.BST;
+import DS.BST.BST_Node;
+import Data.GenerateData;
+import Interface.IBST_Key;
+
 import java.util.*;
 
 public class Structure_Tester<T extends IBST_Key<T>> {
@@ -23,11 +31,11 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         }
         long end = System.currentTimeMillis();
         System.out.println("Čas vkladania: " + (end - start) + " ms");
-        int countBST = countNodes();
-        System.out.println("Počet prvkov - BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
+        int countBST = this.structure.inOrder().size();
+        System.out.println("Počet prvkov - DS.BST.BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
     }
 
-    public void operationDelete(int num_elements) {
+    public boolean operationDelete(int num_elements) {
         System.out.println("\n--- Test DELETE (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
 
@@ -42,8 +50,13 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         long end = System.currentTimeMillis();
         System.out.println("Čas mazania: " + (end - start) + " ms");
 
-        int countBST = countNodes();
-        System.out.println("Počet prvkov - BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
+        int countBST = this.structure.inOrder().size();
+        System.out.println("Počet prvkov - DS.BST.BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
+        if (countBST != helper.size()) {
+            System.out.println("Chyba: Počet prvkov v DS.BST.BST nezhoduje s pomocnou štruktúrou!");
+            return false;
+        }
+        return true;
     }
 
     public void operationSearch(int num_elements) {
@@ -53,7 +66,7 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         for (int i = 0; i < num_elements; i++) {
             int index = random.nextInt(helper.size());
             BST_Node<T> node = helper.get(index);
-            this.structure.rangeSearch(node.getKey(), node.getKey());
+            this.structure.search(node.getKey());
         }
 
         long end = System.currentTimeMillis();
@@ -79,7 +92,7 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("\n--- Test FIND MIN (" + num_ops + " operácií) ---");
         long start = System.currentTimeMillis();
         for (int i = 0; i < num_ops; i++) {
-            getMin(structure.getRoot());
+            structure.getMin();
         }
         long end = System.currentTimeMillis();
         System.out.println("Čas findMin: " + (end - start) + " ms");
@@ -89,27 +102,9 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         System.out.println("\n--- Test FIND MAX (" + num_ops + " operácií) ---");
         long start = System.currentTimeMillis();
         for (int i = 0; i < num_ops; i++) {
-            getMax(structure.getRoot());
+            structure.getMax();
         }
         long end = System.currentTimeMillis();
         System.out.println("Čas findMax: " + (end - start) + " ms");
-    }
-
-    private int countNodes() {
-        return this.structure.inOrder().size();
-    }
-
-    private BST_Node<T> getMin(BST_Node<T> node) {
-        if (node == null) return null;
-        while (node.getLeft_child() != null)
-            node = node.getLeft_child();
-        return node;
-    }
-
-    private BST_Node<T> getMax(BST_Node<T> node) {
-        if (node == null) return null;
-        while (node.getRight_child() != null)
-            node = node.getRight_child();
-        return node;
     }
 }
