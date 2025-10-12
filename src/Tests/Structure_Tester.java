@@ -20,25 +20,17 @@ public class Structure_Tester<T extends IBST_Key<T>> {
     }
 
     public void operationInsert(int num_elements) {
-        System.out.println("\n--- Test INSERT (" + num_elements + " prvkov) ---");
-        long start = System.currentTimeMillis();
-
         for (int i = 0; i < num_elements; i++) {
             T key = (T) new GenerateData(random.nextInt(num_elements * 10));
             AVL_Node<T> node = new AVL_Node<>(key, key);
             helper.add(node);
             structure.insert(node);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Čas vkladania: " + (end - start) + " ms");
         int countBST = this.structure.inOrder().size();
-        System.out.println("Počet prvkov - DS.BST.BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
+        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + helper.size());
     }
 
     public boolean operationDelete(int num_elements) {
-        System.out.println("\n--- Test DELETE (" + num_elements + " prvkov) ---");
-        long start = System.currentTimeMillis();
-
         for (int i = 0; i < num_elements && !helper.isEmpty(); i++) {
             int index = random.nextInt(helper.size());
             BST_Node<T> nodeToDelete = helper.remove(index);
@@ -46,12 +38,8 @@ public class Structure_Tester<T extends IBST_Key<T>> {
                 structure.delete(nodeToDelete);
             }
         }
-
-        long end = System.currentTimeMillis();
-        System.out.println("Čas mazania: " + (end - start) + " ms");
-
         int countBST = this.structure.inOrder().size();
-        System.out.println("Počet prvkov - DS.BST.BST: " + countBST + ", Pomocná štruktúra: " + helper.size());
+        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + helper.size());
         if (countBST != helper.size()) {
             System.out.println("Chyba: Počet prvkov v DS.BST.BST nezhoduje s pomocnou štruktúrou!");
             return false;
@@ -60,51 +48,19 @@ public class Structure_Tester<T extends IBST_Key<T>> {
     }
 
     public void operationSearch(int num_elements) {
-        System.out.println("\n--- Test SEARCH (" + num_elements + " prvkov) ---");
-        long start = System.currentTimeMillis();
-
         for (int i = 0; i < num_elements; i++) {
             int index = random.nextInt(helper.size());
             BST_Node<T> node = helper.get(index);
             this.structure.search(node.getKey());
         }
-
-        long end = System.currentTimeMillis();
-        System.out.println("Čas hľadania: " + (end - start) + " ms");
     }
 
     public void operationRangeSearch(int num_operations) {
-        System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operácií) ---");
-        long start = System.currentTimeMillis();
-
         for (int i = 0; i < num_operations; i++) {
             int lowValue = random.nextInt(50000);
             T low = (T) new GenerateData(lowValue);
-            T high = (T) new GenerateData(lowValue + 1000); // malé intervaly
+            T high = (T) new GenerateData(lowValue + 1000);
             structure.rangeSearch(low, high);
         }
-
-        long end = System.currentTimeMillis();
-        System.out.println("Čas intervalového hľadania: " + (end - start) + " ms");
-    }
-
-    public void operationFindMin(int num_ops) {
-        System.out.println("\n--- Test FIND MIN (" + num_ops + " operácií) ---");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < num_ops; i++) {
-            structure.getMin();
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMin: " + (end - start) + " ms");
-    }
-
-    public void operationFindMax(int num_ops) {
-        System.out.println("\n--- Test FIND MAX (" + num_ops + " operácií) ---");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < num_ops; i++) {
-            structure.getMax();
-        }
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMax: " + (end - start) + " ms");
     }
 }
