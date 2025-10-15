@@ -10,7 +10,7 @@ public class GenerateData implements IBST_Key<GenerateData> {
     }
 
     public int getInteger() {
-        return integer;
+        return this.integer;
     }
 
     @Override

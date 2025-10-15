@@ -17,7 +17,7 @@ public class BST_Node<T extends IBST_Key<T>> {
     }
 
     public BST_Node getLeft_child() {
-        return left_child;
+        return this.left_child;
     }
 
     public void setLeft_child(BST_Node left_child) {
@@ -25,7 +25,7 @@ public class BST_Node<T extends IBST_Key<T>> {
     }
 
     public BST_Node getRight_child() {
-        return right_child;
+        return this.right_child;
     }
 
     public void setRight_child(BST_Node right_child) {
@@ -33,7 +33,7 @@ public class BST_Node<T extends IBST_Key<T>> {
     }
 
     public BST_Node getParent() {
-        return parent;
+        return this.parent;
     }
 
     public void setParent(BST_Node parent) {
@@ -41,10 +41,10 @@ public class BST_Node<T extends IBST_Key<T>> {
     }
 
     public T getData() {
-        return data;
+        return this.data;
     }
     public IBST_Key<T> getKey() {
-        return key;
+        return this.key;
     }
 
     public void setKey(IBST_Key<T> key) {

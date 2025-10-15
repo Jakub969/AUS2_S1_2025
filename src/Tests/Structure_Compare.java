@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Structure_Compare<T extends IBST_Key<T>> {
-    private BST<T> structure;
-    private ArrayList<BST_Node<T>> helper; // pomocná štruktúra na kontrolu počtu
-    private Random random;
+    private final BST<T> structure;
+    private final ArrayList<BST_Node<T>> helper; // pomocná štruktúra na kontrolu počtu
+    private final Random random;
     private long numberOfOperations;
 
     public Structure_Compare(BST<T> structure, long seed) {
@@ -24,62 +24,62 @@ public class Structure_Compare<T extends IBST_Key<T>> {
 
     public void operationInsert(int num_elements) {
         for (int i = 0; i < num_elements; i++) {
-            T key = (T) new GenerateData(random.nextInt(num_elements * 10));
+            T key = (T) new GenerateData(this.random.nextInt(num_elements * 10));
             AVL_Node<T> node = new AVL_Node<>(key, key);
-            helper.add(node);
+            this.helper.add(node);
         }
         System.out.println("\n--- Test INSERT (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
-        for (BST_Node<T> tbstNode : helper) {
-            structure.insert(tbstNode);
-            numberOfOperations++;
+        for (BST_Node<T> tbstNode : this.helper) {
+            this.structure.insert(tbstNode);
+            this.numberOfOperations++;
             checkNumberOfOperations();
         }
         long end = System.currentTimeMillis();
         System.out.println("Čas vkladania: " + (end - start) + " ms");
         int countBST = this.structure.inOrder().size();
-        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + helper.size());
+        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + this.helper.size());
     }
 
     public void operationDelete(int num_elements) {
         ArrayList<BST_Node<T>> nodes = new ArrayList<>();
-        System.out.println("Pripravuje operaciu DELETE...");
-        for (int i = 0; i < num_elements && !helper.isEmpty(); i++) {
-            int index = random.nextInt(helper.size());
-            BST_Node<T> removed = helper.get(index);
-            int lastIndex = helper.size() - 1;
-            helper.set(index, helper.get(lastIndex));
-            helper.remove(lastIndex);
+        System.out.println("Pripravujem operaciu DELETE...");
+        for (int i = 0; i < num_elements && !this.helper.isEmpty(); i++) {
+            int index = this.random.nextInt(this.helper.size());
+            BST_Node<T> removed = this.helper.get(index);
+            int lastIndex = this.helper.size() - 1;
+            this.helper.set(index, this.helper.get(lastIndex));
+            this.helper.remove(lastIndex);
             nodes.add(removed);
         }
         System.out.println("\n--- Test DELETE (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
         for (BST_Node<T> nodeToDelete : nodes) {
             if (nodeToDelete != null) {
-                structure.delete(nodeToDelete);
+                this.structure.delete(nodeToDelete);
             }
-            numberOfOperations++;
+            this.numberOfOperations++;
             checkNumberOfOperations();
         }
         long end = System.currentTimeMillis();
         System.out.println("Čas mazania: " + (end - start) + " ms");
 
         int countBST = this.structure.inOrder().size();
-        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + helper.size());
+        System.out.println("Počet prvkov " + countBST + ", Pomocná štruktúra: " + this.helper.size());
     }
 
     public void operationSearch(int num_elements) {
         ArrayList<BST_Node<T>> nodes = new ArrayList<>();
 
         for (int i = 0; i < num_elements; i++) {
-            int index = random.nextInt(helper.size());
-            nodes.add(helper.get(index));
+            int index = this.random.nextInt(this.helper.size());
+            nodes.add(this.helper.get(index));
         }
         System.out.println("\n--- Test SEARCH (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
         for (BST_Node<T> nodeToSearch : nodes) {
-            structure.search(nodeToSearch.getKey());
-            numberOfOperations++;
+            this.structure.search(nodeToSearch.getKey());
+            this.numberOfOperations++;
             checkNumberOfOperations();
         }
         long end = System.currentTimeMillis();
@@ -90,7 +90,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
         IBST_Key[] ranges = new IBST_Key[num_operations*2];
 
         for (int i = 0; i < num_operations; i++) {
-            int lowValue = random.nextInt(50000);
+            int lowValue = this.random.nextInt(50000);
             T low = (T) new GenerateData(lowValue);
             T high = (T) new GenerateData(lowValue + 1000);
             ranges[i] = low;
@@ -99,8 +99,8 @@ public class Structure_Compare<T extends IBST_Key<T>> {
         System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operácií) ---");
         long start = System.currentTimeMillis();
         for (int i = 0; i < num_operations; i++) {
-            structure.rangeSearch(ranges[i], ranges[i+1]);
-            numberOfOperations++;
+            this.structure.rangeSearch(ranges[i], ranges[i+1]);
+            this.numberOfOperations++;
             checkNumberOfOperations();
         }
         long end = System.currentTimeMillis();
@@ -108,7 +108,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
     }
 
     private void checkNumberOfOperations() {
-        if (numberOfOperations % 2000000 == 0) {
+        if (this.numberOfOperations % 2000000 == 0) {
             operationFindMin();
             operationFindMax();
         }
@@ -117,7 +117,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
     private void operationFindMin() {
         System.out.println("\n--- Test FIND MIN ---");
         long start = System.currentTimeMillis();
-        structure.getMin();
+        this.structure.getMin();
         long end = System.currentTimeMillis();
         System.out.println("Čas findMin: " + (end - start) + " ms");
     }
@@ -125,7 +125,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
     private void operationFindMax() {
         System.out.println("\n--- Test FIND MAX ---");
         long start = System.currentTimeMillis();
-        structure.getMax();
+        this.structure.getMax();
         long end = System.currentTimeMillis();
         System.out.println("Čas findMax: " + (end - start) + " ms");
     }

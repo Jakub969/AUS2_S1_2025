@@ -11,10 +11,11 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     }
 
     @Override
-    public void delete(BST_Node<T> node) {
-        BST_Node<T> parent = node.getParent();
-        super.delete(node);
-        rebalance((AVL_Node<T>) parent, false);
+    public BST_Node<T> delete(BST_Node<T> node) {
+        AVL_Node<T> parent = (AVL_Node<T>) node.getParent();
+        AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
+        rebalance(newNode, false);
+        return newNode;
     }
 
     private void rebalance(AVL_Node<T> node, boolean isInsert) {
@@ -118,5 +119,24 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         x.setRight_child(T2);
 
         return fixRotationLinks(x, y, T2);
+    }
+
+    public boolean compareLeftRightSubtreeHeights(AVL_Node<T> node) {
+        if (node == null) {
+            return true;
+        } else {
+            int leftH = 0;
+            int rightH = 0;
+            if (node.getLeft_child() != null) {
+                leftH = ((AVL_Node<T>) node.getLeft_child()).getHeight();
+            }
+            if (node.getRight_child() != null) {
+                rightH = ((AVL_Node<T>) node.getRight_child()).getHeight();
+            }
+            if (Math.abs(leftH - rightH) > 1) {
+                return false;
+            }
+        }
+        return compareLeftRightSubtreeHeights((AVL_Node<T>) node.getLeft_child()) && compareLeftRightSubtreeHeights((AVL_Node<T>) node.getRight_child());
     }
 }

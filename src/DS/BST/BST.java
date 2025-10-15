@@ -22,12 +22,14 @@ public class BST<T extends IBST_Key<T>> {
         while (current != null) {
             parent = current;
             int compareResult = node.getKey().compareTo(current.getKey());
-            if (compareResult == 0 || compareResult == -1) {
+            if (compareResult == -1) {
                 current = current.getLeft_child();
                 left = true;
             } else if (compareResult == 1) {
                 current = current.getRight_child();
                 left = false;
+            } else if (compareResult == 0) {
+                throw new IllegalArgumentException("Duplicate keys are not allowed.");
             } else {
                 throw new IllegalArgumentException("Key comparison failed.");
             }
@@ -88,7 +90,7 @@ public class BST<T extends IBST_Key<T>> {
         return result;
     }
 
-    public void delete(BST_Node<T> node) {
+    public BST_Node<T> delete(BST_Node<T> node) {
         //Vrchol je list
         if (node.getLeft_child() == null && node.getRight_child() == null) {
             replaceParentLink(node, null);
@@ -96,8 +98,10 @@ public class BST<T extends IBST_Key<T>> {
         //Vrchol ma jedneho potomka
         else if (node.getLeft_child() == null) {
             replaceParentLink(node, node.getRight_child());
+            return node;
         } else if (node.getRight_child() == null) {
             replaceParentLink(node, node.getLeft_child());
+            return node;
         }
         //Vrchol ma dvoch potomkov
         else {
@@ -123,7 +127,9 @@ public class BST<T extends IBST_Key<T>> {
                     node.getRight_child().setParent(successor);
                 }
             }
+            return successor;
         }
+        return null;
     }
 
     private BST_Node<T> getMinNodeInRightSubtree(BST_Node<T> node) {
@@ -153,7 +159,7 @@ public class BST<T extends IBST_Key<T>> {
     }
 
     public BST_Node<T> getRoot() {
-        return root;
+        return this.root;
     }
 
     public ArrayList<BST_Node<T>> inOrder() {
