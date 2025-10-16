@@ -160,7 +160,8 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         ArrayList<BST_Node<T>> sortedHelper = new ArrayList<>(this.helper);
         Collections.sort(sortedHelper, (n1, n2) -> n1.getKey().compareTo(n2.getKey()));
         int startIndex = this.random.nextInt(Math.max(1, sortedHelper.size() - 1));
-        int endIndex = Math.min(startIndex, sortedHelper.size() - 1);
+        int endIndex = startIndex + this.random.nextInt(sortedHelper.size() - startIndex);
+
         for (int i = startIndex; i <= endIndex; i++) {
             foundNodes.add(sortedHelper.get(i));
         }
