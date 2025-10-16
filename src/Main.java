@@ -9,7 +9,7 @@ public class Main {
         /*for (int i = 0; i < 10000000; i++) {
 
         }*/
-        long seed = 1760599593909L;//System.currentTimeMillis();
+        long seed = 1760602704441L;//System.currentTimeMillis();
         System.out.println("Seed: " + seed);
         //Structure_Tester<GenerateData> testBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
         Structure_Tester<GenerateData> testAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);

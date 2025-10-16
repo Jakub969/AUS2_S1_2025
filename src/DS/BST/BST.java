@@ -107,6 +107,7 @@ public class BST<T extends IBST_Key<T>> {
         //Vrchol ma dvoch potomkov
         else {
             BST_Node<T> successor = getMinNodeInRightSubtree(node.getRight_child());
+            BST_Node<T> parentOfSuccessor = successor.getParent();
             //Ak je nasledovník priamy potomok mazaneho vrcholu
             if (successor.getParent() == node) {
                 replaceParentLink(node, successor);
@@ -114,6 +115,7 @@ public class BST<T extends IBST_Key<T>> {
                 if (node.getLeft_child() != null) {
                     node.getLeft_child().setParent(successor);
                 }
+                return successor;
             }
             //Ak nasledovník nie je priamy potomok mazaneho vrcholu
             else {
@@ -127,8 +129,12 @@ public class BST<T extends IBST_Key<T>> {
                 if (node.getRight_child() != null) {
                     node.getRight_child().setParent(successor);
                 }
+                if (successor == this.root) {
+                    return parentOfSuccessor;
+                } else {
+                    return successor;
+                }
             }
-            return successor;
         }
     }
 
