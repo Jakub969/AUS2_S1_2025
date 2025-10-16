@@ -129,11 +129,7 @@ public class BST<T extends IBST_Key<T>> {
                 if (node.getRight_child() != null) {
                     node.getRight_child().setParent(successor);
                 }
-                if (successor == this.root) {
-                    return parentOfSuccessor;
-                } else {
-                    return successor;
-                }
+                return parentOfSuccessor;
             }
         }
     }
