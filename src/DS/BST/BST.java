@@ -94,14 +94,15 @@ public class BST<T extends IBST_Key<T>> {
         //Vrchol je list
         if (node.getLeft_child() == null && node.getRight_child() == null) {
             replaceParentLink(node, null);
+            return node.getParent();
         }
         //Vrchol ma jedneho potomka
         else if (node.getLeft_child() == null) {
             replaceParentLink(node, node.getRight_child());
-            return node;
+            return node.getRight_child();
         } else if (node.getRight_child() == null) {
             replaceParentLink(node, node.getLeft_child());
-            return node;
+            return node.getLeft_child();
         }
         //Vrchol ma dvoch potomkov
         else {
@@ -129,7 +130,6 @@ public class BST<T extends IBST_Key<T>> {
             }
             return successor;
         }
-        return null;
     }
 
     private BST_Node<T> getMinNodeInRightSubtree(BST_Node<T> node) {

@@ -9,12 +9,12 @@ public class Main {
         /*for (int i = 0; i < 10000000; i++) {
 
         }*/
-        long seed = 1760550420914L;System.currentTimeMillis();
+        long seed = 1760599593909L;//System.currentTimeMillis();
         System.out.println("Seed: " + seed);
-        Structure_Tester<GenerateData> testBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
+        //Structure_Tester<GenerateData> testBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
         Structure_Tester<GenerateData> testAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);
-        testBST.fillAndEmptyStructure();
-        testBST.randomOperationGenerator();
+        //testBST.fillAndEmptyStructure();
+        //testBST.randomOperationGenerator();
         testAVL.fillAndEmptyStructure();
         testAVL.randomOperationGenerator();
         /*Structure_Compare<GenerateData> compareBST = new Structure_Compare<>(new BST<GenerateData>(), seed);

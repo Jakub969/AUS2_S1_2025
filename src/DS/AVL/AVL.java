@@ -12,7 +12,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
 
     @Override
     public BST_Node<T> delete(BST_Node<T> node) {
-        AVL_Node<T> parent = (AVL_Node<T>) node.getParent();
         AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
         rebalance(newNode, false);
         return newNode;
