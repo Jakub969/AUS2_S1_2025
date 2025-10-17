@@ -3,14 +3,21 @@ package DS.BST;
 import Interface.IBST_Key;
 import java.util.ArrayList;
 import java.util.Stack;
-
+/** Trieda reprezentujúca binárny vyhľadávací strom (BST)
+ * @param <T> Typ dát implementujúci rozhranie IBST_Key
+ */
 public class BST<T extends IBST_Key<T>> {
     protected BST_Node<T> root;
 
+    /** Konstruktor pre prázdny binárny vyhľadávací strom */
     public BST() {
         this.root = null;
     }
 
+    /** Vloženie vrchola do binárneho vyhľadávacieho stromu
+     * @param node Vrchol na vloženie
+     * @throws IllegalArgumentException Ak sa pokúsite vložiť duplicitný kľúč alebo ak porovnanie kľúčov zlyhá
+     */
     public void insert(BST_Node<T> node) {
         if (this.root == null) {
             this.root = node;
@@ -41,7 +48,11 @@ public class BST<T extends IBST_Key<T>> {
             parent.setRight_child(node);
         }
     }
-
+    /** Vyhľadanie vrchola v binárnom vyhľadávacom strome podľa kľúča
+     * @param key Kľúč vrchola na vyhľadanie
+     * @return Vrchol s daným kľúčom alebo null, ak vrchol neexistuje
+     * @throws IllegalArgumentException Ak porovnanie kľúčov zlyhá
+     */
     public BST_Node<T> search(IBST_Key<T> key) {
         BST_Node<T> current = this.root;
         while (current != null) {
@@ -58,7 +69,11 @@ public class BST<T extends IBST_Key<T>> {
         }
         return null;
     }
-
+    /** Vyhľadanie všetkých vrcholov v zadanom rozsahu kľúčov
+     * @param low Dolná hranica rozsahu (vrátane)
+     * @param high Horná hranica rozsahu (vrátane)
+     * @return Zoznam vrcholov, ktorých kľúče sú v zadanom rozsahu
+     */
     public ArrayList<BST_Node<T>> rangeSearch(IBST_Key<T> low, IBST_Key<T> high) {
         BST_Node<T> current = this.root;
         ArrayList<BST_Node<T>> result = new ArrayList<>();
@@ -89,7 +104,10 @@ public class BST<T extends IBST_Key<T>> {
         }
         return result;
     }
-
+    /** Odstránenie vrchola z binárneho vyhľadávacieho stromu
+     * @param node Vrchol na odstránenie
+     * @return Vrchol, ktorý nahradil odstránený vrchol (alebo rodič vrchola, ktorý nie je priamym potomkom odstráneného vrchola)
+     */
     public BST_Node<T> delete(BST_Node<T> node) {
         //Vrchol je list
         if (node.getLeft_child() == null && node.getRight_child() == null) {
@@ -134,6 +152,10 @@ public class BST<T extends IBST_Key<T>> {
         }
     }
 
+    /** Nájdenie vrchola s minimálnym kľúčom v pravom podstrome zadaného vrchola
+     * @param node Vrchol, ktorého pravý podstrom sa má prehľadať
+     * @return Vrchol s minimálnym kľúčom v pravom podstrome
+     */
     private BST_Node<T> getMinNodeInRightSubtree(BST_Node<T> node) {
         while (node.getLeft_child() != null) {
             node = node.getLeft_child();
@@ -141,6 +163,10 @@ public class BST<T extends IBST_Key<T>> {
         return node;
     }
 
+    /** Nahradenie odkazu rodiča vrchola na daný vrchol novým potomkom
+     * @param node Vrchol, ktorého odkaz rodiča sa má nahradiť
+     * @param newChild Nový potomok, ktorý nahradí daný vrchol
+     */
     private void replaceParentLink(BST_Node<T> node, BST_Node<T> newChild) {
         if (node.getParent() == null) {
             this.root = newChild;
@@ -159,11 +185,15 @@ public class BST<T extends IBST_Key<T>> {
             }
         }
     }
-
+    /** Getter pre koreň stromu
+     * @return Koreň stromu
+     */
     public BST_Node<T> getRoot() {
         return this.root;
     }
-
+    /** In-order prechod stromom
+     * @return Zoznam vrcholov v in-order poradí
+     */
     public ArrayList<BST_Node<T>> inOrder() {
         ArrayList<BST_Node<T>> result = new ArrayList<>();
         Stack<BST_Node<T>> stack = new Stack<>();
@@ -181,7 +211,9 @@ public class BST<T extends IBST_Key<T>> {
         }
         return result;
     }
-
+    /** Nájdenie vrchola s minimálnym kľúčom v celom strome
+     * @return Vrchol s minimálnym kľúčom alebo null, ak je strom prázdny
+     */
     public BST_Node<T> getMin() {
         if (this.root == null) {
             return null;
@@ -192,7 +224,9 @@ public class BST<T extends IBST_Key<T>> {
         }
         return current;
     }
-
+    /** Nájdenie vrchola s maximálnym kľúčom v celom strome
+     * @return Vrchol s maximálnym kľúčom alebo null, ak je strom prázdny
+     */
     public BST_Node<T> getMax() {
         if (this.root == null) {
             return null;

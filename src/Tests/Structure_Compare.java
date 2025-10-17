@@ -86,7 +86,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
     }
 
     public void operationRangeSearch(int num_operations) {
-        System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operations) ---");
+        System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " prvkov) ---");
 
         ArrayList<BST_Node<T>> sortedHelper = new ArrayList<>(this.helper);
         Collections.sort(sortedHelper, (n1, n2) -> n1.getKey().compareTo(n2.getKey()));

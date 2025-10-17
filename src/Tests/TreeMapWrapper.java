@@ -82,7 +82,7 @@ public class TreeMapWrapper<T extends Comparable<T>> {
     }
 
     public void operationRangeSearch(int num_operations) {
-        System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operations) ---");
+        System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " prvkov) ---");
         ArrayList<T> sortedHelper = new ArrayList<>(this.helper);
         Collections.sort(sortedHelper);
         ArrayList<ArrayList<T>> ranges = new ArrayList<>();
@@ -94,7 +94,7 @@ public class TreeMapWrapper<T extends Comparable<T>> {
         long totalTime = 0;
         for (int i = 0; i < num_operations; i++) {
             long start = System.currentTimeMillis();
-            this.map.subMap(ranges.get(i).get(0), ranges.get(i).get(1)).keySet();
+            this.map.subMap(ranges.get(i).get(0), ranges.get(i).get(1));
             long end = System.currentTimeMillis();
 
             totalTime += (end - start);

@@ -1,6 +1,8 @@
 package DS.BST;
 import Interface.IBST_Key;
-
+/** Trieda reprezentujúca vrchol binárneho vyhľadávacieho stromu (BST)
+ * @param <T> Typ dát implementujúci rozhranie IBST_Key
+ */
 public class BST_Node<T extends IBST_Key<T>> {
     private BST_Node left_child;
     private BST_Node right_child;
@@ -8,6 +10,10 @@ public class BST_Node<T extends IBST_Key<T>> {
     private final T data;
     private IBST_Key<T> key;
 
+    /** Konstruktor pre vrchol BST
+     * @param key Kľúč vrchola implementujúci rozhranie IBST_Key
+     * @param data Dáta vrchola
+     */
     public BST_Node(IBST_Key<T> key, T data) {
         this.data = data;
         this.key = key;
@@ -16,6 +22,7 @@ public class BST_Node<T extends IBST_Key<T>> {
         this.parent = null;
     }
 
+    /** Gettery a settery pre atribúty vrchola */
     public BST_Node getLeft_child() {
         return this.left_child;
     }

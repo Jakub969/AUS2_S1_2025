@@ -2,21 +2,31 @@ package DS.AVL;
 
 import Interface.IBST_Key;
 import DS.BST.*;
-
+/** Trieda reprezentujúca AVL strom, ktorý rozširuje binárny vyhľadávací strom (BST)
+ * @param <T> Typ dát implementujúci rozhranie IBST_Key
+ */
 public class AVL<T extends IBST_Key<T>> extends BST<T> {
+    /** Konstruktor pre AVL strom
+     */
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
         rebalance((AVL_Node<T>) node, true);
     }
-
+    /** Odstránenie vrchola zo stromu
+     * @param node Vrchol na odstránenie
+     * @return Nový vrchol, ktorý nahradil odstránený vrchol
+     */
     @Override
     public BST_Node<T> delete(BST_Node<T> node) {
         AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
         rebalance(newNode, false);
         return newNode;
     }
-
+    /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
+     * @param node Vrchol, od ktorého sa začína rebalancovanie
+     * @param isInsert True, ak sa rebalancovanie vykonáva po vložení, inak false
+     */
     private void rebalance(AVL_Node<T> node, boolean isInsert) {
         while (node != null) {
             updateHeight(node);
@@ -55,7 +65,9 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             node = (AVL_Node<T>) node.getParent();
         }
     }
-
+    /** Aktualizácia výšky vrchola
+     * @param node Vrchol, ktorého výška sa má aktualizovať
+     */
     private void updateHeight(AVL_Node<T> node) {
         int leftH = 0;
         int rightH = 0;
@@ -67,7 +79,10 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         }
         node.setHeight(Math.max(leftH, rightH) + 1);
     }
-
+    /** Získanie vyváženia vrchola
+     * @param node Vrchol, ktorého vyváženie sa má získať
+     * @return Hodnota vyváženia vrchola
+     */
     private int getBalance(AVL_Node<T> node) {
         int leftH = 0;
         int rightH = 0;
@@ -79,7 +94,10 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         }
         return leftH - rightH;
     }
-
+    /** Pravá rotácia okolo vrchola y
+     * @param y Vrchol, okolo ktorého sa vykonáva pravá rotácia
+     * @return Nový koreň podstromu po rotácii
+     */
     private BST_Node<T> rotateRight(AVL_Node<T> y) {
         AVL_Node<T> x = (AVL_Node<T>) y.getLeft_child();
         AVL_Node<T> T2 = (AVL_Node<T>) x.getRight_child();
@@ -89,7 +107,12 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
 
         return fixRotationLinks(y, x, T2);
     }
-
+    /** Oprava odkazov po rotácii
+     * @param y Pôvodný koreň podstromu pred rotáciou
+     * @param x Nový koreň podstromu po rotácii
+     * @param t2 Podstrom T2, ktorý sa musí aktualizovať
+     * @return Nový koreň podstromu po oprave odkazov
+     */
     private BST_Node<T> fixRotationLinks(AVL_Node<T> y, AVL_Node<T> x, AVL_Node<T> t2) {
         if (t2 != null) {
             t2.setParent(y);
@@ -109,7 +132,10 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
 
         return x;
     }
-
+    /** Ľavá rotácia okolo vrchola x
+     * @param x Vrchol, okolo ktorého sa vykonáva ľavá rotácia
+     * @return Nový koreň podstromu po rotácii
+     */
     private BST_Node<T> rotateLeft(AVL_Node<T> x) {
         AVL_Node<T> y = (AVL_Node<T>) x.getRight_child();
         AVL_Node<T> T2 = (AVL_Node<T>) y.getLeft_child();
@@ -119,7 +145,10 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
 
         return fixRotationLinks(x, y, T2);
     }
-
+    /** Overenie, či strom spĺňa AVL vlastnosti
+     * @param node Koreň stromu alebo podstromu na overenie
+     * @return True, ak strom spĺňa AVL vlastnosti, inak false
+     */
     public boolean compareLeftRightSubtreeHeights(AVL_Node<T> node) {
         if (node == null) {
             return true;
