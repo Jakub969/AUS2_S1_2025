@@ -106,7 +106,8 @@ public class Structure_Compare<T extends IBST_Key<T>> {
             long start = System.currentTimeMillis();
             this.structure.rangeSearch(ranges[i][0].getKey(), ranges[i][0].getKey());
             long end = System.currentTimeMillis();
-
+            this.numberOfOperations++;
+            checkNumberOfOperations();
             totalTime += (end - start);
         }
         System.out.println("Celkový čas range search: " + totalTime + " ms");
@@ -121,17 +122,17 @@ public class Structure_Compare<T extends IBST_Key<T>> {
 
     private void operationFindMin() {
         System.out.println("\n--- Test FIND MIN ---");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         this.structure.getMin();
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMin: " + (end - start) + " ms");
+        long end = System.nanoTime();
+        System.out.println("Čas findMin: " + (end - start) + " ns");
     }
 
     private void operationFindMax() {
         System.out.println("\n--- Test FIND MAX ---");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         this.structure.getMax();
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMax: " + (end - start) + " ms");
+        long end = System.nanoTime();
+        System.out.println("Čas findMax: " + (end - start) + " ns");
     }
 }

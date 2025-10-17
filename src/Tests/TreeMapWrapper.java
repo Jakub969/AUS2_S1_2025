@@ -73,7 +73,7 @@ public class TreeMapWrapper<T extends Comparable<T>> {
         System.out.println("\n--- Test SEARCH (" + num_elements + " prvkov) ---");
         long start = System.currentTimeMillis();
         for (T key : searchKeys) {
-            this.map.containsKey(key);
+            this.map.get(key);
             this.numberOfOperations++;
             checkNumberOfOperations();
         }
@@ -96,7 +96,8 @@ public class TreeMapWrapper<T extends Comparable<T>> {
             long start = System.currentTimeMillis();
             this.map.subMap(ranges.get(i).get(0), ranges.get(i).get(1));
             long end = System.currentTimeMillis();
-
+            this.numberOfOperations++;
+            checkNumberOfOperations();
             totalTime += (end - start);
         }
         System.out.println("Celkový čas range search: " + totalTime + " ms");
@@ -104,18 +105,18 @@ public class TreeMapWrapper<T extends Comparable<T>> {
 
     private void operationFindMin() {
         System.out.println("\n--- Test FIND MIN ---");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         this.map.firstKey();
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMin: " + (end - start) + " ms");
+        long end = System.nanoTime();
+        System.out.println("Čas findMin: " + (end - start) + " ns");
     }
 
     private void operationFindMax() {
         System.out.println("\n--- Test FIND MAX ---");
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         this.map.lastKey();
-        long end = System.currentTimeMillis();
-        System.out.println("Čas findMax: " + (end - start) + " ms");
+        long end = System.nanoTime();
+        System.out.println("Čas findMax: " + (end - start) + " ns");
     }
 
     private void checkNumberOfOperations() {
