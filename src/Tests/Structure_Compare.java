@@ -91,33 +91,25 @@ public class Structure_Compare<T extends IBST_Key<T>> {
         ArrayList<BST_Node<T>> sortedHelper = new ArrayList<>(this.helper);
         Collections.sort(sortedHelper, (n1, n2) -> n1.getKey().compareTo(n2.getKey()));
 
-        int[][] ranges = new int[num_operations][2];
+        BST_Node[][] ranges = new BST_Node[num_operations][2];
         for (int i = 0; i < num_operations; i++) {
             int startIndex = this.random.nextInt(sortedHelper.size() - 500);
             int endIndex = startIndex + 500 + this.random.nextInt(sortedHelper.size() - startIndex - 500);
-            ranges[i][0] = startIndex;
-            ranges[i][1] = endIndex;
+            ranges[i][0] = sortedHelper.get(startIndex);
+            ranges[i][1] = sortedHelper.get(endIndex);
         }
 
         long totalTime = 0;
-        int validQueries = 0;
 
         for (int i = 0; i < num_operations; i++) {
-            T fromKey = (T) sortedHelper.get(ranges[i][0]).getKey();
-            T toKey = (T) sortedHelper.get(ranges[i][1]).getKey();
 
-            long start = System.nanoTime();
-            this.structure.rangeSearch(fromKey, toKey);
-            long end = System.nanoTime();
+            long start = System.currentTimeMillis();
+            this.structure.rangeSearch(ranges[i][0].getKey(), ranges[i][0].getKey());
+            long end = System.currentTimeMillis();
 
             totalTime += (end - start);
-            validQueries++;
         }
-
-        double avgTimeMs = (totalTime / (double) validQueries) / 1_000_000.0;
-
-        System.out.printf("Počet intervalových hľadaní: %d%n", validQueries);
-        System.out.printf("Priemerný čas intervalového hľadania: %.6f ms%n", avgTimeMs);
+        System.out.println("Celkový čas range search: " + totalTime + " ms");
     }
 
     private void checkNumberOfOperations() {

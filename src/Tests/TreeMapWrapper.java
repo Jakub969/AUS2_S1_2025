@@ -85,30 +85,21 @@ public class TreeMapWrapper<T extends Comparable<T>> {
         System.out.println("\n--- Test RANGE SEARCH (" + num_operations + " operations) ---");
         ArrayList<T> sortedHelper = new ArrayList<>(this.helper);
         Collections.sort(sortedHelper);
-        int[][] ranges = new int[num_operations][2];
+        ArrayList<ArrayList<T>> ranges = new ArrayList<>();
         for (int i = 0; i < num_operations; i++) {
             int startIndex = this.random.nextInt(sortedHelper.size() - 500);
             int endIndex = startIndex + 500 + this.random.nextInt(sortedHelper.size() - startIndex - 500);
-            ranges[i][0] = startIndex;
-            ranges[i][1] = endIndex;
+            ranges.add(new ArrayList<>(Arrays.asList(sortedHelper.get(startIndex), sortedHelper.get(endIndex))));
         }
         long totalTime = 0;
-        int validQueries = 0;
         for (int i = 0; i < num_operations; i++) {
-            T fromKey = sortedHelper.get(ranges[i][0]);
-            T toKey = sortedHelper.get(ranges[i][1]);
-
-            long start = System.nanoTime();
-            this.map.subMap(fromKey, toKey).keySet();
-            long end = System.nanoTime();
+            long start = System.currentTimeMillis();
+            this.map.subMap(ranges.get(i).get(0), ranges.get(i).get(1)).keySet();
+            long end = System.currentTimeMillis();
 
             totalTime += (end - start);
-            validQueries++;
         }
-
-        double avgTimeMs = (totalTime / (double) validQueries) / 1_000_000.0;
-        System.out.printf("Počet intervalových hľadaní: %d%n", validQueries);
-        System.out.printf("Priemerný čas intervalového hľadania: %.6f ms%n", avgTimeMs);
+        System.out.println("Celkový čas range search: " + totalTime + " ms");
     }
 
     private void operationFindMin() {
