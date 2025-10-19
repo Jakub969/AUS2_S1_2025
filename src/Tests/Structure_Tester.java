@@ -146,7 +146,7 @@ public class Structure_Tester<T extends IBST_Key<T>> {
         BST_Node<T> node = this.helper.get(index);
         BST_Node<T> treeNode = this.structure.search(node.getKey());
         if (treeNode != node) {
-            System.out.println("Chyba search: Nájdený uzol sa nezhoduje s očakávaným!");
+            System.out.println("Chyba search: Nájdený vrchol sa nezhoduje s očakávaným!");
             return false;
         }
         return true;
@@ -170,12 +170,12 @@ public class Structure_Tester<T extends IBST_Key<T>> {
                 sortedHelper.get(endIndex).getKey()
         );
         if (treeNodes.size() != foundNodes.size()) {
-            System.out.println("Chyba range search: Počet nájdených uzlov sa nezhoduje s očakávaným!");
+            System.out.println("Chyba range search: Počet nájdených vrcholov sa nezhoduje s očakávaným!");
             return false;
         }
         for (int i = 0; i < treeNodes.size(); i++) {
             if (treeNodes.get(i) != foundNodes.get(i)) {
-                System.out.println("Chyba range search: Nájdený uzol sa nezhoduje s očakávaným!");
+                System.out.println("Chyba range search: Nájdený vrcholov sa nezhoduje s očakávaným!");
                 return false;
             }
         }
