@@ -75,35 +75,58 @@ public class BST<T extends IBST_Key<T>> {
      * @return Zoznam vrcholov, ktorých kľúče sú v zadanom rozsahu
      */
     public ArrayList<BST_Node<T>> rangeSearch(IBST_Key<T> low, IBST_Key<T> high) {
-        BST_Node<T> current = this.root;
         ArrayList<BST_Node<T>> result = new ArrayList<>();
-        Stack<BST_Node<T>> stack = new Stack<>();
-        while (current != null || !stack.isEmpty()) {
-            //Hľadám najmenší prvok v rozsahu
-            while (current != null) {
-                if (current.getKey().compareTo(low) >= 0) {
-                    stack.push(current);
-                    current = current.getLeft_child();
-                } else {
-                    current = current.getRight_child();
-                }
-            }
-            if (!stack.isEmpty()) {
-                current = stack.pop();
-                if (current.getKey().compareTo(low) >= 0 && current.getKey().compareTo(high) <= 0) {
-                    result.add(current);
-                }
-                if (current.getKey().compareTo(high) < 0) {
-                    current = current.getRight_child();
-                } else {
-                    current = null;
-                }
+        if (this.root == null) return result;
+
+        BST_Node<T> current = this.root;
+        BST_Node<T> candidate = null;
+
+        //najdem najmenší prvok z rozsahu
+        while (current != null) {
+            if (current.getKey().compareTo(low) >= 0) {
+                candidate = current;  // potenciálny prvok v rozsahu
+                current = current.getLeft_child(); // možno existuje menší
             } else {
-                break;
+                current = current.getRight_child();
             }
+        }
+
+        //teraz candidate je najmenší uzol s kľúčom >= low (môže byť null)
+        if (candidate == null) return result;
+
+        //prechádzam inorder nasledovníkov, kým sme v rozsahu
+        current = candidate;
+        while (current != null && current.getKey().compareTo(high) <= 0) {
+            if (current.getKey().compareTo(low) >= 0) {
+                result.add(current);
+            }
+            current = getInorderSuccessor(current);
         }
         return result;
     }
+
+    private BST_Node<T> getInorderSuccessor(BST_Node<T> node) {
+        if (node == null) return null;
+
+        //ak má pravé dieťa, nasledovník je najľavejší v pravom podstrome
+        if (node.getRight_child() != null) {
+            BST_Node<T> succ = node.getRight_child();
+            while (succ.getLeft_child() != null)
+                succ = succ.getLeft_child();
+            return succ;
+        }
+
+        //inak idem hore, kým neprídem zľava
+        BST_Node<T> parent = node.getParent();
+        BST_Node<T> child = node;
+        while (parent != null && parent.getRight_child() == child) {
+            child = parent;
+            parent = parent.getParent();
+        }
+
+        return parent;
+    }
+
     /** Odstránenie vrchola z binárneho vyhľadávacieho stromu
      * @param node Vrchol na odstránenie
      * @return Vrchol, ktorý nahradil odstránený vrchol (alebo rodič vrchola, ktorý nie je priamym potomkom odstráneného vrchola)
