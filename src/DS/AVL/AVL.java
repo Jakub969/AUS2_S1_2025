@@ -29,7 +29,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
      */
     private void rebalance(AVL_Node<T> node, boolean isInsert) {
         while (node != null) {
-            int oldBalance = getBalance(node);
             updateHeight(node);
             int newBalance = getBalance(node);
 
@@ -54,10 +53,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 if (isInsert) {
                     break;
                 }
-            } else if (isInsert && (newBalance == 1 || newBalance == -1)) {
-                break;
-            } else if (!isInsert && oldBalance == 0 && newBalance != 0) {
-                break;
             }
 
             if (node.getParent() == null) {
