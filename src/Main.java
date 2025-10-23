@@ -17,7 +17,7 @@ public class Main {
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
         }*/
-        long seed = 1761245155894L;
+        long seed = 1761250854568L;
         Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);
         testerAVL.fillAndEmptyStructure();
         testerAVL.randomOperationGenerator();

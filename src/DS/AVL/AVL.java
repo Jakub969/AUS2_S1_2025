@@ -11,21 +11,56 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
-        rebalance((AVL_Node<T>) node, true);
+        rebalanceInsert((AVL_Node<T>) node);
     }
+
     /** Odstránenie vrchola zo stromu
      * @param node Vrchol na odstránenie
      */
     @Override
     public void delete(BST_Node<T> node) {
         super.delete(node);
-        rebalance((AVL_Node<T>) node, false);
+        rebalanceDelete((AVL_Node<T>) node);
     }
+    private void rebalanceInsert(AVL_Node<T> node) {
+        while (node != null) {
+            updateHeight(node);
+            int balance = getBalance(node);
+
+            // 4 prípady
+            if (balance > 1) {
+                //LR
+                if (getBalance((AVL_Node<T>) node.getLeft_child()) < 0) {
+                    node.setLeft_child(rotateLeft((AVL_Node<T>) node.getLeft_child()));
+                }
+                //RR
+                rotateRight(node);
+                break;
+            } else if (balance < -1) {
+                //RL
+                if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
+                    node.setRight_child(rotateRight((AVL_Node<T>) node.getRight_child()));
+                }
+                //LL
+                rotateLeft(node);
+                break;
+            } else if (balance == 0 && node.getHeight() > 1) {
+                break;
+            }
+
+            if (node.getParent() == null) {
+                // node je nový root
+                super.root = node;
+            }
+
+            node = (AVL_Node<T>) node.getParent();
+        }
+    }
+
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, od ktorého sa začína rebalancovanie
-     * @param isInsert True, ak sa rebalancovanie vykonáva po vložení, inak false
      */
-    private void rebalance(AVL_Node<T> node, boolean isInsert) {
+    private void rebalanceDelete(AVL_Node<T> node) {
         while (!super.stack.empty()) {
             AVL_Node<T> pathNode = (AVL_Node<T>) super.stack.pop();
             if (pathNode == node) {
@@ -34,7 +69,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             boolean wasBalanced = pathNode.isBalanced();
             updateHeight(pathNode);
             int newBalance = getBalance(pathNode);
-            if (!isInsert && wasBalanced && Math.abs(newBalance) == 1) {
+            if (wasBalanced && Math.abs(newBalance) == 1) {
                 break;
             }
 
@@ -46,9 +81,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //RR
                 pathNode = (AVL_Node<T>) rotateRight(pathNode);
-                if (isInsert) {
-                    break;
-                }
             } else if (newBalance < -1) {
                 //RL
                 if (getBalance((AVL_Node<T>) pathNode.getRight_child()) > 0) {
@@ -56,9 +88,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //LL
                 pathNode = (AVL_Node<T>) rotateLeft(pathNode);
-                if (isInsert) {
-                    break;
-                }
             }
 
             if (pathNode.getParent() == null) {

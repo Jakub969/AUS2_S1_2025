@@ -189,9 +189,10 @@ public class BST<T extends IBST_Key<T>> {
      * @return Vrchol s minimálnym kľúčom v pravom podstrome
      */
     private BST_Node<T> getMinNodeInRightSubtree(BST_Node<T> node) {
+        this.stack.push(node);
         while (node.getLeft_child() != null) {
-            this.stack.push(node);
             node = node.getLeft_child();
+            this.stack.push(node);
         }
         return node;
     }
