@@ -15,23 +15,25 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     }
     /** Odstránenie vrchola zo stromu
      * @param node Vrchol na odstránenie
-     * @return Nový vrchol, ktorý nahradil odstránený vrchol
      */
     @Override
-    public BST_Node<T> delete(BST_Node<T> node) {
-        AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
-        rebalance(newNode, false);
-        return newNode;
+    public void delete(BST_Node<T> node) {
+        super.delete(node);
+        rebalance((AVL_Node<T>) node, false);
     }
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, od ktorého sa začína rebalancovanie
      * @param isInsert True, ak sa rebalancovanie vykonáva po vložení, inak false
      */
     private void rebalance(AVL_Node<T> node, boolean isInsert) {
-        while (node != null) {
-            boolean wasBalanced = node.isBalanced();
-            updateHeight(node);
-            int newBalance = getBalance(node);
+        while (!super.stack.empty()) {
+            AVL_Node<T> pathNode = (AVL_Node<T>) super.stack.pop();
+            if (pathNode == node) {
+                continue;
+            }
+            boolean wasBalanced = pathNode.isBalanced();
+            updateHeight(pathNode);
+            int newBalance = getBalance(pathNode);
             if (!isInsert && wasBalanced && Math.abs(newBalance) == 1) {
                 break;
             }
@@ -39,33 +41,32 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             // 4 prípady
             if (newBalance > 1) {
                 //LR
-                if (getBalance((AVL_Node<T>) node.getLeft_child()) < 0) {
-                    node.setLeft_child(rotateLeft((AVL_Node<T>) node.getLeft_child()));
+                if (getBalance((AVL_Node<T>) pathNode.getLeft_child()) < 0) {
+                    pathNode.setLeft_child(rotateLeft((AVL_Node<T>) pathNode.getLeft_child()));
                 }
                 //RR
-                node = (AVL_Node<T>) rotateRight(node);
+                pathNode = (AVL_Node<T>) rotateRight(pathNode);
                 if (isInsert) {
                     break;
                 }
             } else if (newBalance < -1) {
                 //RL
-                if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
-                    node.setRight_child(rotateRight((AVL_Node<T>) node.getRight_child()));
+                if (getBalance((AVL_Node<T>) pathNode.getRight_child()) > 0) {
+                    pathNode.setRight_child(rotateRight((AVL_Node<T>) pathNode.getRight_child()));
                 }
                 //LL
-                node = (AVL_Node<T>) rotateLeft(node);
+                pathNode = (AVL_Node<T>) rotateLeft(pathNode);
                 if (isInsert) {
                     break;
                 }
             }
 
-            if (node.getParent() == null) {
+            if (pathNode.getParent() == null) {
                 // node je nový root
-                super.root = node;
+                super.root = pathNode;
             }
-
-            node = (AVL_Node<T>) node.getParent();
         }
+        super.stack.clear();
     }
     /** Aktualizácia výšky vrchola
      * @param node Vrchol, ktorého výška sa má aktualizovať

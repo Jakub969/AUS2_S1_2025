@@ -8,10 +8,12 @@ import java.util.Stack;
  */
 public class BST<T extends IBST_Key<T>> {
     protected BST_Node<T> root;
+    protected Stack<BST_Node<T>> stack;
 
     /** Konstruktor pre prázdny binárny vyhľadávací strom */
     public BST() {
         this.root = null;
+        this.stack = new Stack<>();
     }
 
     /** Vloženie vrchola do binárneho vyhľadávacieho stromu
@@ -129,21 +131,30 @@ public class BST<T extends IBST_Key<T>> {
 
     /** Odstránenie vrchola z binárneho vyhľadávacieho stromu
      * @param node Vrchol na odstránenie
-     * @return Vrchol, ktorý nahradil odstránený vrchol (alebo rodič vrchola, ktorý nie je priamym potomkom odstráneného vrchola)
      */
-    public BST_Node<T> delete(BST_Node<T> node) {
+    public void delete(BST_Node<T> node) {
+        BST_Node<T> current = this.root;
+        while (current != null) {
+            this.stack.push(current);
+            if (current.getKey().compareTo(node.getKey()) == 0) {
+                break;
+            } else if (node.getKey().compareTo(current.getKey()) == 1) {
+                current = current.getRight_child();
+            } else if (node.getKey().compareTo(current.getKey()) == -1) {
+                current = current.getLeft_child();
+            }
+        }
         //Vrchol je list
         if (node.getLeft_child() == null && node.getRight_child() == null) {
             replaceParentLink(node, null);
-            return node.getParent();
         }
         //Vrchol ma jedneho potomka
         else if (node.getLeft_child() == null) {
             replaceParentLink(node, node.getRight_child());
-            return node.getRight_child();
+            this.stack.push(node.getRight_child());
         } else if (node.getRight_child() == null) {
             replaceParentLink(node, node.getLeft_child());
-            return node.getLeft_child();
+            this.stack.push(node.getLeft_child());
         }
         //Vrchol ma dvoch potomkov
         else {
@@ -156,7 +167,6 @@ public class BST<T extends IBST_Key<T>> {
                 if (node.getLeft_child() != null) {
                     node.getLeft_child().setParent(successor);
                 }
-                return successor;
             }
             //Ak nasledovník nie je priamy potomok mazaneho vrcholu
             else {
@@ -170,7 +180,6 @@ public class BST<T extends IBST_Key<T>> {
                 if (node.getRight_child() != null) {
                     node.getRight_child().setParent(successor);
                 }
-                return parentOfSuccessor;
             }
         }
     }
@@ -181,6 +190,7 @@ public class BST<T extends IBST_Key<T>> {
      */
     private BST_Node<T> getMinNodeInRightSubtree(BST_Node<T> node) {
         while (node.getLeft_child() != null) {
+            this.stack.push(node);
             node = node.getLeft_child();
         }
         return node;
