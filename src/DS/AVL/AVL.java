@@ -11,7 +11,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
-        rebalance((AVL_Node<T>) node, true);
+        rebalance((AVL_Node<T>) node, null,false);
     }
     /** Odstránenie vrchola zo stromu
      * @param node Vrchol na odstránenie
@@ -19,20 +19,43 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
      */
     @Override
     public BST_Node<T> delete(BST_Node<T> node) {
+        boolean isRightChild = false;
+        AVL_Node<T> parent = (AVL_Node<T>) node.getParent();
+        if (parent != null && parent.getRight_child() == node) {
+            isRightChild = true;
+        }
         AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
-        rebalance(newNode, false);
+        if (parent != null) {
+            if (parent != newNode) {
+                isRightChild = false;
+            }
+        }
+        rebalance(newNode, (AVL_Node<T>) node,isRightChild);
         return newNode;
     }
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, od ktorého sa začína rebalancovanie
-     * @param isInsert True, ak sa rebalancovanie vykonáva po vložení, inak false
+     * @param deletedNodeIsRightChildOfNode True, ak sa odstránený vrchol nachádzal ako pravý potomok vrchola node
      */
-    private void rebalance(AVL_Node<T> node, boolean isInsert) {
+    private void rebalance(AVL_Node<T> node, AVL_Node<T> deletedNode, boolean deletedNodeIsRightChildOfNode) {
         while (node != null) {
-            int oldBalance = getBalance(node);
+            int oldBalance = 0;
+            if (deletedNode != null) {
+                if (deletedNodeIsRightChildOfNode) {
+                    if (node.getLeft_child() != null) {
+                        oldBalance = ((AVL_Node<T>) node.getLeft_child()).getHeight() - deletedNode.getHeight();
+                    }
+                } else {
+                    if (node.getRight_child() != null) {
+                        oldBalance = deletedNode.getHeight() - ((AVL_Node<T>) node.getRight_child()).getHeight();
+                    }
+                }
+            }
             updateHeight(node);
             int newBalance = getBalance(node);
-
+            if (deletedNode != null && oldBalance == 0 && (newBalance == 1 || newBalance == -1)) {
+                break;
+            }
             // 4 prípady
             if (newBalance > 1) {
                 //LR
@@ -41,7 +64,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //RR
                 node = (AVL_Node<T>) rotateRight(node);
-                if (isInsert) {
+                if (deletedNode == null) {
                     break;
                 }
             } else if (newBalance < -1) {
@@ -51,13 +74,9 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 }
                 //LL
                 node = (AVL_Node<T>) rotateLeft(node);
-                if (isInsert) {
+                if (deletedNode == null) {
                     break;
                 }
-            } else if (isInsert && (newBalance == 1 || newBalance == -1)) {
-                break;
-            } else if (!isInsert && oldBalance == 0 && newBalance != 0) {
-                break;
             }
 
             if (node.getParent() == null) {
