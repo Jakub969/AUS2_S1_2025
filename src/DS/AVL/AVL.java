@@ -29,8 +29,12 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
      */
     private void rebalance(AVL_Node<T> node, boolean isInsert) {
         while (node != null) {
+            boolean wasBalanced = node.isBalanced();
             updateHeight(node);
             int newBalance = getBalance(node);
+            if (!isInsert && wasBalanced && Math.abs(newBalance) == 1) {
+                break;
+            }
 
             // 4 prípady
             if (newBalance > 1) {
@@ -90,7 +94,9 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         if (node.getRight_child() != null) {
             rightH = ((AVL_Node<T>) node.getRight_child()).getHeight();
         }
-        return leftH - rightH;
+        int result = leftH - rightH;
+        node.setBalanced(result == 0);
+        return result;
     }
     /** Pravá rotácia okolo vrchola y
      * @param y Vrchol, okolo ktorého sa vykonáva pravá rotácia
