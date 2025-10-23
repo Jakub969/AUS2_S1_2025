@@ -2,9 +2,6 @@ package DS.AVL;
 
 import Interface.IBST_Key;
 import DS.BST.*;
-
-import java.util.Stack;
-
 /** Trieda reprezentujúca AVL strom, ktorý rozširuje binárny vyhľadávací strom (BST)
  * @param <T> Typ dát implementujúci rozhranie IBST_Key
  */
@@ -14,7 +11,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
-        rebalanceInsert((AVL_Node<T>) node);
+        rebalance((AVL_Node<T>) node, true);
     }
     /** Odstránenie vrchola zo stromu
      * @param node Vrchol na odstránenie
@@ -22,53 +19,40 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
      */
     @Override
     public BST_Node<T> delete(BST_Node<T> node) {
-        Stack<AVL_Node<T>> path = new Stack<>();
-        AVL_Node<T> current = (AVL_Node<T>) super.root;
-        while (current != null) {
-            path.push(current);
-            int compareResult = node.getKey().compareTo(current.getKey());
-            if (compareResult == 0) {
-                path.pop();
-                break;
-            } else if (compareResult == -1) {
-                current = (AVL_Node<T>) current.getLeft_child();
-            } else {
-                current = (AVL_Node<T>) current.getRight_child();
-            }
-        }
         AVL_Node<T> newNode = (AVL_Node<T>) super.delete(node);
-        if (newNode != path.peek()) {
-            path.push(newNode);
-        }
-        rebalanceDelete(path);
+        rebalance(newNode, false);
         return newNode;
     }
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, od ktorého sa začína rebalancovanie
+     * @param isInsert True, ak sa rebalancovanie vykonáva po vložení, inak false
      */
-    private void rebalanceInsert(AVL_Node<T> node) {
+    private void rebalance(AVL_Node<T> node, boolean isInsert) {
         while (node != null) {
             updateHeight(node);
-            int balance = getBalance(node);
+            int newBalance = getBalance(node);
 
             // 4 prípady
-            if (balance > 1) {
+            if (newBalance > 1) {
                 //LR
                 if (getBalance((AVL_Node<T>) node.getLeft_child()) < 0) {
                     node.setLeft_child(rotateLeft((AVL_Node<T>) node.getLeft_child()));
                 }
                 //RR
                 node = (AVL_Node<T>) rotateRight(node);
-            } else if (balance < -1) {
+                if (isInsert) {
+                    break;
+                }
+            } else if (newBalance < -1) {
                 //RL
                 if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
                     node.setRight_child(rotateRight((AVL_Node<T>) node.getRight_child()));
                 }
                 //LL
                 node = (AVL_Node<T>) rotateLeft(node);
-
-            } else if (balance == 0 && node.getHeight() > 1) {
-                break;
+                if (isInsert) {
+                    break;
+                }
             }
 
             if (node.getParent() == null) {
@@ -79,38 +63,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             node = (AVL_Node<T>) node.getParent();
         }
     }
-    private void rebalanceDelete(Stack<AVL_Node<T>> path) {
-        while (!path.empty()) {
-            AVL_Node<T> node = path.pop();
-            int oldBalance = getBalance(node);
-            updateHeight(node);
-            int balance = getBalance(node);
-            if (balance > 1) {
-                //LR
-                if (getBalance((AVL_Node<T>) node.getLeft_child()) < 0) {
-                    node.setLeft_child(rotateLeft((AVL_Node<T>) node.getLeft_child()));
-                }
-                //RR
-                node = (AVL_Node<T>) rotateRight(node);
-            } else if (balance < -1) {
-                //RL
-                if (getBalance((AVL_Node<T>) node.getRight_child()) > 0) {
-                    node.setRight_child(rotateRight((AVL_Node<T>) node.getRight_child()));
-                }
-                //LL
-                node = (AVL_Node<T>) rotateLeft(node);
-
-            } else if (oldBalance == 0 && Math.abs(balance) == 1) {
-                break;
-            }
-
-            if (node.getParent() == null) {
-                // node je nový root
-                super.root = node;
-            }
-        }
-    }
-
     /** Aktualizácia výšky vrchola
      * @param node Vrchol, ktorého výška sa má aktualizovať
      */
