@@ -10,9 +10,9 @@ public class Main {
 
         long seed = 1761158093866L;
         System.out.println("Seed: " + seed);
-        Structure_Tester<GenerateData> testerBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
-        testerBST.fillAndEmptyStructure();
-        testerBST.randomOperationGenerator();
+        //Structure_Tester<GenerateData> testerBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
+        //testerBST.fillAndEmptyStructure();
+        //testerBST.randomOperationGenerator();
         Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);
         testerAVL.fillAndEmptyStructure();
         testerAVL.randomOperationGenerator();
