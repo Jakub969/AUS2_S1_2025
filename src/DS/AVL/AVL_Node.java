@@ -6,7 +6,6 @@ import DS.BST.BST_Node;
  */
 public class AVL_Node<T extends IBST_Key<T>> extends BST_Node<T> {
     private int height;
-    private boolean isBalanced;
     /** Konstruktor pre vrchol AVL
      * @param key Kľúč vrchola implementujúci rozhranie IBST_Key
      * @param data Dáta vrchola
@@ -14,14 +13,6 @@ public class AVL_Node<T extends IBST_Key<T>> extends BST_Node<T> {
     public AVL_Node(IBST_Key<T> key, T data) {
         super(key, data);
         this.height = 1;
-        this.isBalanced = true;
-    }
-    public boolean isBalanced() {
-        return this.isBalanced;
-    }
-
-    public void setBalanced(boolean balanced) {
-        this.isBalanced = balanced;
     }
 
     /** Getter a setter pre atribút height */
