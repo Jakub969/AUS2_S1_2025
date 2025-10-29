@@ -1,11 +1,13 @@
 package Data;
 
+import Interface.IBST_Key;
+
 import java.util.Date;
 
-public class PCR_Test {
+public class PCR_Test implements IBST_Key<PCR_Test> {
     private Date datumACasTestu;
     private String UUIDOsoby;
-    private int idPCR;
+    private int kodPCR;
     private int UUIDPracoviska;
     private int kodOkresu;
     private int kodKraja;
@@ -13,12 +15,12 @@ public class PCR_Test {
     private double hodnotaTestu;
     private String poznamka;
 
-    public PCR_Test(Date datumACasTestu, String UUIDOsoby, int idPCR, int UUIDPracoviska,
+    public PCR_Test(Date datumACasTestu, String UUIDOsoby, int kodPCR, int UUIDPracoviska,
                     int kodOkresu, int kodKraja, boolean vysledokTestu,
                     double hodnotaTestu, String poznamka) {
         this.datumACasTestu = datumACasTestu;
         this.UUIDOsoby = UUIDOsoby;
-        this.idPCR = idPCR;
+        this.kodPCR = kodPCR;
         this.UUIDPracoviska = UUIDPracoviska;
         this.kodOkresu = kodOkresu;
         this.kodKraja = kodKraja;
@@ -35,8 +37,8 @@ public class PCR_Test {
         return this.UUIDOsoby;
     }
 
-    public int getIdPCR() {
-        return this.idPCR;
+    public int getKodPCR() {
+        return this.kodPCR;
     }
 
     public int getUUIDPracoviska() {
@@ -61,5 +63,13 @@ public class PCR_Test {
 
     public String getPoznamka() {
         return this.poznamka;
+    }
+
+    @Override
+    public int compareTo(IBST_Key<PCR_Test> object) {
+        if (this.kodPCR == ((PCR_Test) object).getKodPCR()) {
+            return 0;
+        }
+        return 0;
     }
 }

@@ -1,8 +1,10 @@
 package Data;
 
+import Interface.IBST_Key;
+
 import java.util.Date;
 
-public class Osoba {
+public class Osoba implements IBST_Key<Osoba> {
     private String meno;
     private String priezvisko;
     private Date datumNarodenia;
@@ -29,5 +31,10 @@ public class Osoba {
 
     public String getUUID() {
         return this.UUID;
+    }
+
+    @Override
+    public int compareTo(IBST_Key<Osoba> object) {
+        return this.UUID.compareTo(((Osoba) object).getUUID());
     }
 }
