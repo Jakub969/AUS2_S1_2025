@@ -23,6 +23,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void delete(BST_Node<T> node) {
         Stack<PathItem<T>> stack = getPathToDeletedNode((AVL_Node<T>) node);
+        boolean nodeWasRoot = (node == super.root);
         super.delete(node);
         rebalanceDelete((AVL_Node<T>) node, stack);
     }
@@ -51,12 +52,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             } else if (balance == 0 && node.getHeight() > 1) {
                 break;
             }
-
-            if (node.getParent() == null) {
-                // node je nový root
-                super.root = node;
-            }
-
             node = (AVL_Node<T>) node.getParent();
         }
     }
@@ -65,18 +60,20 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
      * @param node Vrchol, od ktorého sa začína rebalancovanie
      */
     private void rebalanceDelete(AVL_Node<T> node, Stack<PathItem<T>> stack) {
+        PathItem<T> lastNode = stack.pop();
         while (!stack.empty()) {
             PathItem<T> item = stack.pop();
             AVL_Node<T> pathNode = item.node;
             int oldBalance = item.oldBalance;
 
             if (pathNode == node) {
-                continue;
+                pathNode = lastNode.node;
             }
             updateHeight(pathNode);
             int newBalance = getBalance(pathNode);
 
             if ((oldBalance == 0) && (Math.abs(newBalance) == 1) && (pathNode != super.root)) {
+                updateHeight(lastNode.node);
                 break;
             }
 
@@ -84,16 +81,12 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 if (getBalance((AVL_Node<T>) pathNode.getLeft_child()) < 0) {
                     pathNode.setLeft_child(rotateLeft((AVL_Node<T>) pathNode.getLeft_child()));
                 }
-                pathNode = (AVL_Node<T>) rotateRight(pathNode);
+                rotateRight(pathNode);
             } else if (newBalance < -1) {
                 if (getBalance((AVL_Node<T>) pathNode.getRight_child()) > 0) {
                     pathNode.setRight_child(rotateRight((AVL_Node<T>) pathNode.getRight_child()));
                 }
-                pathNode = (AVL_Node<T>) rotateLeft(pathNode);
-            }
-
-            if (pathNode.getParent() == null) {
-                super.root = pathNode;
+                rotateLeft(pathNode);
             }
         }
     }

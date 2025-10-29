@@ -7,20 +7,16 @@ import Tests.TreeMapWrapper;
 
 public class Main {
     public static void main(String[] args) {
-        /*for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100; i++) {
             long seed = System.currentTimeMillis();
             System.out.println("seed: " + seed);
-            Structure_Tester<GenerateData> testerBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20);
+            Structure_Tester<GenerateData> testerBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20000);
             testerBST.fillAndEmptyStructure();
             testerBST.randomOperationGenerator();
-            Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);
+            Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20000);
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
-        }*/
-        long seed = 1761677549130L;
-        Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20);
-        testerAVL.fillAndEmptyStructure();
-        testerAVL.randomOperationGenerator();
+        }
         /*
         int pocetVkladanychPrvkov = 10000000;
         int pocetMazanychPrvkov = 2000000;
