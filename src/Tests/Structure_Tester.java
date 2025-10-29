@@ -30,23 +30,19 @@ public class Structure_Tester<T extends IBST_Key<T>> {
             double rand = this.random.nextDouble();
             if (rand < 0.75) {
                 if (!operationInsert()) {
-                    System.out.println("Test zlyhal pri operácii INSERT.");
-                    return;
+                    throw new IllegalArgumentException("Test zlyhal pri operácii INSERT.");
                 }
             } else if (rand < 0.8) {
                 if (!operationDelete()) {
-                    System.out.println("Test zlyhal pri operácii DELETE.");
-                    return;
+                    throw new IllegalArgumentException("Test zlyhal pri operácii DELETE.");
                 }
             } else if (rand < 0.85) {
                 if (!operationSearch()) {
-                    System.out.println("Test zlyhal pri operácii SEARCH.");
-                    return;
+                    throw new IllegalArgumentException("Test zlyhal pri operácii SEARCH.");
                 }
             } else {
                 if (!operationRangeSearch()) {
-                    System.out.println("Test zlyhal pri operácii RANGE SEARCH.");
-                    return;
+                    throw new IllegalArgumentException("Test zlyhal pri operácii RANGE-SEARCH.");
                 }
             }
         }
