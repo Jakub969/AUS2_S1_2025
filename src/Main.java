@@ -3,9 +3,22 @@ import DS.BST.BST;
 import Data.GenerateTestData;
 import Tests.Structure_Tester;
 
-public class Main {
+import GUI.Model.Model;
+import GUI.View.View;
+import javafx.stage.Stage;
+
+public class Main extends javafx.application.Application {
+
+    @Override
+    public void start(Stage stage) {
+        Model model = new Model();
+        new View(stage, model);
+    }
+
     public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
+        launch();
+
+        /*for (int i = 0; i < 100; i++) {
             long seed = System.currentTimeMillis();
             System.out.println("seed: " + seed);
             Structure_Tester<GenerateTestData> testerBST = new Structure_Tester<>(new BST<GenerateTestData>(), seed, 20000);
@@ -14,7 +27,7 @@ public class Main {
             Structure_Tester<GenerateTestData> testerAVL = new Structure_Tester<>(new AVL<GenerateTestData>(), seed, 20000);
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
-        }
+        }*/
         /*
         int pocetVkladanychPrvkov = 10000000;
         int pocetMazanychPrvkov = 2000000;

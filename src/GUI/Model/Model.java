@@ -18,6 +18,10 @@ public class Model {
     public Model() {
         this.osobyAVL = new AVL<>();
         this.pcrTestsAVL = new AVL<>();
+        this.pcrTestsDatumAVL = new AVL<>();
+        this.pcrTestsOkresAVL = new AVL<>();
+        this.pcrTestsKrajAVL = new AVL<>();
+        this.pcrTestsHodnotaAVL = new AVL<>();
     }
 
     public void vlozPCRTest(AVL_Node<PCR_Test> pcrTest) {
