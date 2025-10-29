@@ -76,7 +76,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             updateHeight(pathNode);
             int newBalance = getBalance(pathNode);
 
-            if (oldBalance == 0 && Math.abs(newBalance) == 1) {
+            if ((oldBalance == 0) && (Math.abs(newBalance) == 1) && (pathNode != super.root)) {
                 break;
             }
 
