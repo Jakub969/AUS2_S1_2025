@@ -23,7 +23,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     @Override
     public void delete(BST_Node<T> node) {
         Stack<PathItem<T>> stack = getPathToDeletedNode((AVL_Node<T>) node);
-        boolean nodeWasRoot = (node == super.root);
         super.delete(node);
         rebalanceDelete((AVL_Node<T>) node, stack);
     }

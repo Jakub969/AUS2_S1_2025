@@ -2,6 +2,7 @@ package DS.BST;
 
 import Interface.IBST_Key;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 /** Trieda reprezentujúca binárny vyhľadávací strom (BST)
  * @param <T> Typ dát implementujúci rozhranie IBST_Key
@@ -254,5 +255,53 @@ public class BST<T extends IBST_Key<T>> {
             current = current.getRight_child();
         }
         return current;
+    }
+
+    private ArrayList<BST_Node<T>> levelOrder() {
+        ArrayList<BST_Node<T>> result = new ArrayList<>();
+        if (this.root == null) {
+            return result;
+        }
+        LinkedList<BST_Node<T>> queue = new LinkedList<>();
+        queue.add(this.root);
+        while (!queue.isEmpty()) {
+            BST_Node<T> current = queue.removeFirst();
+            result.add(current);
+            if (current.getLeft_child() != null) {
+                queue.add(current.getLeft_child());
+            }
+            if (current.getRight_child() != null) {
+                queue.add(current.getRight_child());
+            }
+        }
+        return result;
+    }
+
+    public void saveToCSV(String filename) {
+        ArrayList<BST_Node<T>> nodes = this.levelOrder();
+        try (java.io.FileWriter writer = new java.io.FileWriter(filename)) {
+            for (BST_Node<T> node : nodes) {
+                writer.write(node.getKey().toString() + "," + node.getData().toString() + "\n");
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFromCSV(String filename) {
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",", 2);
+                if (parts.length == 2) {
+                    T data = (T) Class.forName("T").getConstructor(String.class).newInstance(parts[1]);
+                    IBST_Key<T> key = (IBST_Key<T>) Class.forName("T").getConstructor(String.class).newInstance(parts[0]);
+                    BST_Node<T> node = new BST_Node<>(key, data);
+                    this.insert(node);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

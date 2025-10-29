@@ -57,4 +57,9 @@ public class BST_Node<T extends IBST_Key<T>> {
     public void setKey(IBST_Key<T> key) {
         this.key = key;
     }
+
+    @Override
+    public String toString() {
+        return this.data.toString();
+    }
 }
