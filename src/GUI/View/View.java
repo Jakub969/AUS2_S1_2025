@@ -2,15 +2,28 @@ package GUI.View;
 
 import GUI.Model.Model;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
+import java.io.File;
 
 public class View {
 
     private final Model model;
     private final TextArea outputArea;
+
+    // Vstupné polia
+    private final TextField tfPocetDat;
+    private final TextField tfPacientID;
+    private final TextField tfOkres;
+    private final TextField tfKraj;
+    private final TextField tfPracovisko;
+    private final TextField tfPocetDni;
+    private final DatePicker dpDatumOd;
+    private final DatePicker dpDatumDo;
 
     public View(Stage stage, Model model) {
         this.model = model;
@@ -22,13 +35,61 @@ public class View {
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
 
-        Label title = new Label("Systém evidencie PCR testov (AVL Tree Demo)");
+        Label title = new Label("Systém evidencie PCR testov (AVL Tree)");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        title.setAlignment(Pos.CENTER);
 
-        // --- Sekcia tlačidiel
-        GridPane buttonsGrid = new GridPane();
-        buttonsGrid.setHgap(10);
-        buttonsGrid.setVgap(8);
+        // ===== VSTUPNÉ POLE PARAMETROV =====
+        GridPane inputGrid = new GridPane();
+        inputGrid.setHgap(10);
+        inputGrid.setVgap(8);
+
+        dpDatumOd = new DatePicker();
+        dpDatumDo = new DatePicker();
+        tfOkres = new TextField();
+        tfKraj = new TextField();
+        tfPracovisko = new TextField();
+        tfPocetDni = new TextField();
+        tfPacientID = new TextField();
+        tfPocetDat = new TextField();
+
+        inputGrid.add(new Label("Dátum od:"), 0, 0);
+        inputGrid.add(dpDatumOd, 1, 0);
+        inputGrid.add(new Label("Dátum do:"), 2, 0);
+        inputGrid.add(dpDatumDo, 3, 0);
+
+        inputGrid.add(new Label("Okres (kód):"), 0, 1);
+        inputGrid.add(tfOkres, 1, 1);
+        inputGrid.add(new Label("Kraj (kód):"), 2, 1);
+        inputGrid.add(tfKraj, 3, 1);
+
+        inputGrid.add(new Label("Pracovisko (kód):"), 0, 2);
+        inputGrid.add(tfPracovisko, 1, 2);
+        inputGrid.add(new Label("Počet dní choroby:"), 2, 2);
+        inputGrid.add(tfPocetDni, 3, 2);
+
+        inputGrid.add(new Label("Pacient ID:"), 0, 3);
+        inputGrid.add(tfPacientID, 1, 3);
+        inputGrid.add(new Label("Počet dát (pre generátor):"), 2, 3);
+        inputGrid.add(tfPocetDat, 3, 3);
+
+        // ===== HLAVNÉ TLAČIDLÁ =====
+        HBox fileButtons = new HBox(10);
+        Button btnGenerate = new Button("Vygeneruj dáta");
+        Button btnSaveCSV = new Button("Ulož do CSV");
+        Button btnLoadCSV = new Button("Načítaj z CSV");
+
+        fileButtons.getChildren().addAll(btnGenerate, btnSaveCSV, btnLoadCSV);
+        fileButtons.setAlignment(Pos.CENTER);
+
+        btnGenerate.setOnAction(e -> handleGenerate());
+        btnSaveCSV.setOnAction(e -> handleSaveCSV());
+        btnLoadCSV.setOnAction(e -> handleLoadCSV());
+
+        // ===== OPERÁCIE (21 tlačidiel) =====
+        GridPane operationsGrid = new GridPane();
+        operationsGrid.setHgap(10);
+        operationsGrid.setVgap(8);
 
         String[] operations = {
                 "1. Vloženie výsledku PCR testu",
@@ -59,45 +120,90 @@ public class View {
             Button btn = new Button(label);
             btn.setPrefWidth(380);
             btn.setOnAction(e -> handleOperation(label));
-            buttonsGrid.add(btn, col, row);
+            operationsGrid.add(btn, col, row);
             row++;
             if (row % 7 == 0) { col++; row = 0; }
         }
 
-        root.getChildren().addAll(title, buttonsGrid, new Label("Výstup:"), outputArea);
-        Scene scene = new Scene(root, 1200, 700);
+        // ===== VÝSTUP =====
+        VBox outputBox = new VBox(5);
+        outputBox.getChildren().addAll(new Label("Výstup:"), outputArea);
 
+        // ===== CELKOVÝ LAYOUT =====
+        root.getChildren().addAll(title, inputGrid, fileButtons, new Separator(), operationsGrid, new Separator(), outputBox);
+
+        Scene scene = new Scene(root, 1300, 850);
         stage.setTitle("PCR Evidenčný systém (AVL)");
         stage.setScene(scene);
         stage.show();
     }
 
+    // ================== HANDLERY ==================
+
+    private void handleGenerate() {
+        String pocetText = tfPocetDat.getText().trim();
+        outputArea.clear();
+        if (pocetText.isEmpty()) {
+            outputArea.appendText("Zadaj počet dát pre generovanie.\n");
+            return;
+        }
+        try {
+            int n = Integer.parseInt(pocetText);
+            outputArea.appendText("Generujem " + n + " testovacích záznamov...\n");
+            // model.vygenerujData(n); // doplníš neskôr
+        } catch (NumberFormatException e) {
+            outputArea.appendText("Chybný formát čísla.\n");
+        }
+    }
+
+    private void handleSaveCSV() {
+        outputArea.clear();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Ulož CSV súbor");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV súbory (*.csv)", "*.csv"));
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            outputArea.appendText("Ukladám dáta do súboru: " + file.getAbsolutePath() + "\n");
+            try {
+                // Tu doplníš volanie svojej metódy z modelu
+                // model.saveToCSV(file.getAbsolutePath());
+                outputArea.appendText("Úspešne uložené.\n");
+            } catch (Exception e) {
+                outputArea.appendText("Chyba pri ukladaní: " + e.getMessage() + "\n");
+            }
+        } else {
+            outputArea.appendText("Ukladanie zrušené používateľom.\n");
+        }
+    }
+
+    private void handleLoadCSV() {
+        outputArea.clear();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Načítaj CSV súbor");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV súbory (*.csv)", "*.csv"));
+
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            outputArea.appendText("Načítavam dáta zo súboru: " + file.getAbsolutePath() + "\n");
+            try {
+                // Tu doplníš volanie svojej metódy z modelu
+                // model.loadFromCSV(file.getAbsolutePath());
+                outputArea.appendText("Úspešne načítané.\n");
+            } catch (Exception e) {
+                outputArea.appendText("Chyba pri načítaní: " + e.getMessage() + "\n");
+            }
+        } else {
+            outputArea.appendText("Načítanie zrušené používateľom.\n");
+        }
+    }
+
     private void handleOperation(String op) {
         outputArea.clear();
-        switch (op) {
-            case "1. Vloženie výsledku PCR testu" -> outputArea.appendText("Volaná operácia 1 - vloženie PCR testu\n");
-            case "2. Vyhľadanie výsledku testu" -> outputArea.appendText("Volaná operácia 2 - vyhľadanie výsledku testu\n");
-            case "3. Výpis testov pre osobu" -> outputArea.appendText("Volaná operácia 3 - výpis testov pre osobu\n");
-            case "4. Pozitívne testy (dátum + okres)" -> outputArea.appendText("Volaná operácia 4 - pozitívne testy (dátum + okres)\n");
-            case "5. Všetky testy (dátum + okres)" -> outputArea.appendText("Volaná operácia 5 - všetky testy (dátum + okres)\n");
-            case "6. Pozitívne testy (dátum + kraj)" -> outputArea.appendText("Volaná operácia 6 - pozitívne testy (dátum + kraj)\n");
-            case "7. Všetky testy (dátum + kraj)" -> outputArea.appendText("Volaná operácia 7 - všetky testy (dátum + kraj)\n");
-            case "8. Pozitívne testy (dátum)" -> outputArea.appendText("Volaná operácia 8 - pozitívne testy (dátum)\n");
-            case "9. Všetky testy (dátum)" -> outputArea.appendText("Volaná operácia 9 - všetky testy (dátum)\n");
-            case "10. Choré osoby (okres, X dní)" -> outputArea.appendText("Volaná operácia 10 - choré osoby (okres, X dní)\n");
-            case "11. Choré osoby (okres, X dní, podľa hodnoty)" -> outputArea.appendText("Volaná operácia 11 - choré osoby (okres, X dní, podľa hodnoty)\n");
-            case "12. Choré osoby (kraj, X dní)" -> outputArea.appendText("Volaná operácia 12 - choré osoby (kraj, X dní)\n");
-            case "13. Choré osoby (celkovo, X dní)" -> outputArea.appendText("Volaná operácia 13 - choré osoby (celkovo, X dní)\n");
-            case "14. Najvyššia hodnota testu v okrese" -> outputArea.appendText("Volaná operácia 14 - najvyššia hodnota testu v okrese\n");
-            case "15. Okresy podľa počtu chorých" -> outputArea.appendText("Volaná operácia 15 - okresy podľa počtu chorých\n");
-            case "16. Kraje podľa počtu chorých" -> outputArea.appendText("Volaná operácia 16 - kraje podľa počtu chorých\n");
-            case "17. Testy (dátum + pracovisko)" -> outputArea.appendText("Volaná operácia 17 - testy (dátum + pracovisko)\n");
-            case "18. Vyhľadanie PCR testu" -> outputArea.appendText("Volaná operácia 18 - vyhľadanie PCR testu\n");
-            case "19. Vloženie osoby" -> outputArea.appendText("Volaná operácia 19 - vloženie osoby\n");
-            case "20. Vymazanie PCR testu" -> outputArea.appendText("Volaná operácia 20 - vymazanie PCR testu\n");
-            case "21. Vymazanie osoby" -> outputArea.appendText("Volaná operácia 21 - vymazanie osoby\n");
-            default -> outputArea.appendText("Neznáma operácia: " + op + "\n");
-        }
+        outputArea.appendText("Spustená operácia: " + op + "\n");
+        // Tu budeš volať metódy z Model podľa operácie
     }
 
     public TextArea getOutputArea() {
