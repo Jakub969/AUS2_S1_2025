@@ -4,7 +4,7 @@ import DS.AVL.AVL;
 import DS.AVL.AVL_Node;
 import DS.BST.BST;
 import DS.BST.BST_Node;
-import Data.GenerateData;
+import Data.GenerateTestData;
 import Interface.IBST_Key;
 
 import java.util.*;
@@ -66,7 +66,7 @@ public class Structure_Tester<T extends IBST_Key<T>> {
             } while (uK.contains(randomValue));
 
             uK.add(randomValue);
-            T key = (T) new GenerateData(randomValue);
+            T key = (T) new GenerateTestData(randomValue);
             AVL_Node<T> node = new AVL_Node<>(key, key);
             this.helper.add(node);
             this.structure.insert(node);
@@ -94,7 +94,7 @@ public class Structure_Tester<T extends IBST_Key<T>> {
             randomValue = this.random.nextInt(this.numberOfOperations);
         } while (this.usedKeys.contains(randomValue));
         this.usedKeys.add(randomValue);
-        T key = (T) new GenerateData(randomValue);
+        T key = (T) new GenerateTestData(randomValue);
 
         AVL_Node<T> node = new AVL_Node<>(key, key);
         this.helper.add(node);

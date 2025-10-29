@@ -3,7 +3,7 @@ package Tests;
 import DS.AVL.AVL_Node;
 import DS.BST.BST;
 import DS.BST.BST_Node;
-import Data.GenerateData;
+import Data.GenerateTestData;
 import Interface.IBST_Key;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class Structure_Compare<T extends IBST_Key<T>> {
                 keyValue = this.random.nextInt(num_elements);
             } while (this.usedKeys.contains(keyValue));
             this.usedKeys.add(keyValue);
-            T key = (T) new GenerateData(keyValue);
+            T key = (T) new GenerateTestData(keyValue);
             AVL_Node<T> node = new AVL_Node<>(key, key);
             this.helper.add(node);
         }

@@ -1,19 +1,17 @@
 import DS.AVL.AVL;
 import DS.BST.BST;
-import Data.GenerateData;
-import Tests.Structure_Compare;
+import Data.GenerateTestData;
 import Tests.Structure_Tester;
-import Tests.TreeMapWrapper;
 
 public class Main {
     public static void main(String[] args) {
         for (int i = 0; i < 100; i++) {
             long seed = System.currentTimeMillis();
             System.out.println("seed: " + seed);
-            Structure_Tester<GenerateData> testerBST = new Structure_Tester<>(new BST<GenerateData>(), seed, 20000);
+            Structure_Tester<GenerateTestData> testerBST = new Structure_Tester<>(new BST<GenerateTestData>(), seed, 20000);
             testerBST.fillAndEmptyStructure();
             testerBST.randomOperationGenerator();
-            Structure_Tester<GenerateData> testerAVL = new Structure_Tester<>(new AVL<GenerateData>(), seed, 20000);
+            Structure_Tester<GenerateTestData> testerAVL = new Structure_Tester<>(new AVL<GenerateTestData>(), seed, 20000);
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
         }
@@ -24,9 +22,9 @@ public class Main {
         int pocetPrvkovPreIntervaloveHladanie = 1000000;
 
         long seed = System.currentTimeMillis();
-        Structure_Compare<GenerateData> compareBST = new Structure_Compare<>(new BST<GenerateData>(), seed);
-        Structure_Compare<GenerateData> compareAVL = new Structure_Compare<>(new AVL<GenerateData>(), seed);
-        TreeMapWrapper<GenerateData> compareTreeMap = new TreeMapWrapper<>(seed);
+        Structure_Compare<GenerateTestData> compareBST = new Structure_Compare<>(new BST<GenerateTestData>(), seed);
+        Structure_Compare<GenerateTestData> compareAVL = new Structure_Compare<>(new AVL<GenerateTestData>(), seed);
+        TreeMapWrapper<GenerateTestData> compareTreeMap = new TreeMapWrapper<>(seed);
 
         compareBST.operationInsert(pocetVkladanychPrvkov);
         compareAVL.operationInsert(pocetVkladanychPrvkov);

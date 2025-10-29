@@ -1,4 +1,4 @@
-package Data;
+package Data.Osoba;
 
 import Interface.IBST_Key;
 

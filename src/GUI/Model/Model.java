@@ -2,14 +2,18 @@ package GUI.Model;
 
 import DS.AVL.AVL;
 import DS.AVL.AVL_Node;
-import Data.Osoba;
-import Data.PCR_Test;
+import Data.Osoba.Osoba;
+import Data.PCR_Test.*;
 
 import java.util.ArrayList;
 
 public class Model {
     private AVL<Osoba> osobyAVL;
     private AVL<PCR_Test> pcrTestsAVL;
+    private AVL<PCR_TestDatumWrapper> pcrTestsDatumAVL;
+    private AVL<PCR_TestOkresWrapper> pcrTestsOkresAVL;
+    private AVL<PCR_TestKrajWrapper> pcrTestsKrajAVL;
+    private AVL<PCR_TestHodnotaTestuWrapper> pcrTestsHodnotaAVL;
 
     public Model() {
         this.osobyAVL = new AVL<>();

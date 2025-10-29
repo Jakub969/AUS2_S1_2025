@@ -1,4 +1,4 @@
-package Data;
+package Data.PCR_Test;
 
 import Interface.IBST_Key;
 
@@ -67,9 +67,10 @@ public class PCR_Test implements IBST_Key<PCR_Test> {
 
     @Override
     public int compareTo(IBST_Key<PCR_Test> object) {
-        if (this.kodPCR == ((PCR_Test) object).getKodPCR()) {
-            return 0;
+        if (object instanceof PCR_Test other) {
+            return Integer.compare(this.kodPCR, other.kodPCR);
+        } else {
+            throw new IllegalArgumentException("Object is not Data.PCR_Test.PCR_Test type.");
         }
-        return 0;
     }
 }
