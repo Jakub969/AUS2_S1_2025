@@ -1,6 +1,6 @@
 package GUI.View;
 
-import GUI.Model.Model;
+import GUI.Controller.Controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,9 +11,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 
 public class View {
-
-    private final Model model;
     private final TextArea outputArea;
+    private Controller controller;
 
     // Vstupné polia
     private final TextField tfPocetDat;
@@ -25,12 +24,11 @@ public class View {
     private final DatePicker dpDatumOd;
     private final DatePicker dpDatumDo;
 
-    public View(Stage stage, Model model) {
-        this.model = model;
+    public View(Stage stage) {
         this.outputArea = new TextArea();
-        outputArea.setEditable(false);
-        outputArea.setWrapText(true);
-        outputArea.setPrefHeight(400);
+        this.outputArea.setEditable(false);
+        this.outputArea.setWrapText(true);
+        this.outputArea.setPrefHeight(400);
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
@@ -44,34 +42,34 @@ public class View {
         inputGrid.setHgap(10);
         inputGrid.setVgap(8);
 
-        dpDatumOd = new DatePicker();
-        dpDatumDo = new DatePicker();
-        tfOkres = new TextField();
-        tfKraj = new TextField();
-        tfPracovisko = new TextField();
-        tfPocetDni = new TextField();
-        tfPacientID = new TextField();
-        tfPocetDat = new TextField();
+        this.dpDatumOd = new DatePicker();
+        this.dpDatumDo = new DatePicker();
+        this.tfOkres = new TextField();
+        this.tfKraj = new TextField();
+        this.tfPracovisko = new TextField();
+        this.tfPocetDni = new TextField();
+        this.tfPacientID = new TextField();
+        this.tfPocetDat = new TextField();
 
         inputGrid.add(new Label("Dátum od:"), 0, 0);
-        inputGrid.add(dpDatumOd, 1, 0);
+        inputGrid.add(this.dpDatumOd, 1, 0);
         inputGrid.add(new Label("Dátum do:"), 2, 0);
-        inputGrid.add(dpDatumDo, 3, 0);
+        inputGrid.add(this.dpDatumDo, 3, 0);
 
         inputGrid.add(new Label("Okres (kód):"), 0, 1);
-        inputGrid.add(tfOkres, 1, 1);
+        inputGrid.add(this.tfOkres, 1, 1);
         inputGrid.add(new Label("Kraj (kód):"), 2, 1);
-        inputGrid.add(tfKraj, 3, 1);
+        inputGrid.add(this.tfKraj, 3, 1);
 
         inputGrid.add(new Label("Pracovisko (kód):"), 0, 2);
-        inputGrid.add(tfPracovisko, 1, 2);
+        inputGrid.add(this.tfPracovisko, 1, 2);
         inputGrid.add(new Label("Počet dní choroby:"), 2, 2);
-        inputGrid.add(tfPocetDni, 3, 2);
+        inputGrid.add(this.tfPocetDni, 3, 2);
 
         inputGrid.add(new Label("Pacient ID:"), 0, 3);
-        inputGrid.add(tfPacientID, 1, 3);
+        inputGrid.add(this.tfPacientID, 1, 3);
         inputGrid.add(new Label("Počet dát (pre generátor):"), 2, 3);
-        inputGrid.add(tfPocetDat, 3, 3);
+        inputGrid.add(this.tfPocetDat, 3, 3);
 
         // ===== HLAVNÉ TLAČIDLÁ =====
         HBox fileButtons = new HBox(10);
@@ -127,7 +125,7 @@ public class View {
 
         // ===== VÝSTUP =====
         VBox outputBox = new VBox(5);
-        outputBox.getChildren().addAll(new Label("Výstup:"), outputArea);
+        outputBox.getChildren().addAll(new Label("Výstup:"), this.outputArea);
 
         // ===== CELKOVÝ LAYOUT =====
         root.getChildren().addAll(title, inputGrid, fileButtons, new Separator(), operationsGrid, new Separator(), outputBox);
@@ -138,26 +136,18 @@ public class View {
         stage.show();
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
     // ================== HANDLERY ==================
 
     private void handleGenerate() {
-        String pocetText = tfPocetDat.getText().trim();
-        outputArea.clear();
-        if (pocetText.isEmpty()) {
-            outputArea.appendText("Zadaj počet dát pre generovanie.\n");
-            return;
-        }
-        try {
-            int n = Integer.parseInt(pocetText);
-            outputArea.appendText("Generujem " + n + " testovacích záznamov...\n");
-            // model.vygenerujData(n); // doplníš neskôr
-        } catch (NumberFormatException e) {
-            outputArea.appendText("Chybný formát čísla.\n");
-        }
+        this.controller.onGenerate(Integer.parseInt(this.tfPocetDat.getText().trim()));
     }
 
     private void handleSaveCSV() {
-        outputArea.clear();
+        this.outputArea.clear();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Ulož CSV súbor");
@@ -165,21 +155,15 @@ public class View {
 
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
-            outputArea.appendText("Ukladám dáta do súboru: " + file.getAbsolutePath() + "\n");
-            try {
-                // Tu doplníš volanie svojej metódy z modelu
-                // model.saveToCSV(file.getAbsolutePath());
-                outputArea.appendText("Úspešne uložené.\n");
-            } catch (Exception e) {
-                outputArea.appendText("Chyba pri ukladaní: " + e.getMessage() + "\n");
-            }
+            this.outputArea.appendText("Ukladám dáta do súboru: " + file.getAbsolutePath() + "\n");
+            this.controller.onSaveCSV(file.getAbsolutePath());
         } else {
-            outputArea.appendText("Ukladanie zrušené používateľom.\n");
+            this.outputArea.appendText("Ukladanie zrušené používateľom.\n");
         }
     }
 
     private void handleLoadCSV() {
-        outputArea.clear();
+        this.outputArea.clear();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Načítaj CSV súbor");
@@ -187,26 +171,27 @@ public class View {
 
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
-            outputArea.appendText("Načítavam dáta zo súboru: " + file.getAbsolutePath() + "\n");
-            try {
-                // Tu doplníš volanie svojej metódy z modelu
-                // model.loadFromCSV(file.getAbsolutePath());
-                outputArea.appendText("Úspešne načítané.\n");
-            } catch (Exception e) {
-                outputArea.appendText("Chyba pri načítaní: " + e.getMessage() + "\n");
-            }
+            this.controller.onLoadCSV(file.getAbsolutePath());
         } else {
-            outputArea.appendText("Načítanie zrušené používateľom.\n");
+            this.outputArea.appendText("Načítanie zrušené používateľom.\n");
         }
     }
 
     private void handleOperation(String op) {
-        outputArea.clear();
-        outputArea.appendText("Spustená operácia: " + op + "\n");
-        // Tu budeš volať metódy z Model podľa operácie
+        this.outputArea.clear();
+        controller.onOperation(
+                op,
+                dpDatumOd.getValue() == null ? null : java.sql.Date.valueOf(dpDatumOd.getValue()),
+                dpDatumDo.getValue() == null ? null : java.sql.Date.valueOf(dpDatumDo.getValue()),
+                tfOkres.getText().isEmpty() ? null : Integer.parseInt(tfOkres.getText()),
+                tfKraj.getText().isEmpty() ? null : Integer.parseInt(tfKraj.getText()),
+                tfPracovisko.getText().isEmpty() ? null : Integer.parseInt(tfPracovisko.getText()),
+                tfPocetDni.getText().isEmpty() ? null : Integer.parseInt(tfPocetDni.getText()),
+                tfPacientID.getText().trim().isEmpty() ? null : tfPacientID.getText().trim()
+        );
     }
 
     public TextArea getOutputArea() {
-        return outputArea;
+        return this.outputArea;
     }
 }

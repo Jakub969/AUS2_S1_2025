@@ -1,6 +1,7 @@
 import DS.AVL.AVL;
 import DS.BST.BST;
 import Data.GenerateTestData;
+import GUI.Controller.Controller;
 import Tests.Structure_Tester;
 
 import GUI.Model.Model;
@@ -12,7 +13,9 @@ public class Main extends javafx.application.Application {
     @Override
     public void start(Stage stage) {
         Model model = new Model();
-        new View(stage, model);
+        View view = new View(stage);
+        Controller controller = new Controller(model, view);
+        view.setController(controller);
     }
 
     public static void main(String[] args) {
