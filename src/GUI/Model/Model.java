@@ -410,13 +410,80 @@ public class Model {
     }
 
     //Ulozenie do CSV
-    public void ulozDoCSV() {
+    public void ulozDoCSV(String cestaSuboru) {
+        try (java.io.FileWriter writer = new java.io.FileWriter(cestaSuboru + "_osoby.csv")) {
+            ArrayList<BST_Node<Osoba>> osobyNodes = this.osobyAVL.levelOrder();
+            for (BST_Node<Osoba> node : osobyNodes) {
+                writer.write(node.getData().toString() + "\n");
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
 
+        try (java.io.FileWriter writer = new java.io.FileWriter(cestaSuboru + "_testy.csv")) {
+            ArrayList<BST_Node<PCR_Test>> testNodes = this.pcrTestsAVL.levelOrder();
+            for (BST_Node<PCR_Test> node : testNodes) {
+                writer.write(node.getData().toString() + "\n");
+            }
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //Nacitanie z CSV
-    public void nacitajZCSV() {
+    public void nacitajZCSV(String cestaSuboru) {
+        this.osobyAVL = new AVL<>();
+        this.pcrTestsAVL = new AVL<>();
+        this.pcrTestsDatumAVL = new AVL<>();
+        this.pcrTestsOkresAVL = new AVL<>();
+        this.pcrTestsKrajAVL = new AVL<>();
+        this.pcrTestsDatumPracoviskoAVL = new AVL<>();
+        this.pcrPozitivneTestsDatumAVL = new AVL<>();
+        this.pcrNegativneTestsDatumAVL = new AVL<>();
+        this.pcrTestsUUIDOsobyAVL = new AVL<>();
+        this.pcrPozitivneTestsOkresDatumAVL = new AVL<>();
+        this.pcrTestOkresDatumAVL = new AVL<>();
+        this.pcrPozitivneTestsKrajDatumAVL = new AVL<>();
+        this.pcrTestsKrajDatumAVL = new AVL<>();
+        try (java.io.BufferedReader reader =
+                     new java.io.BufferedReader(new java.io.FileReader(cestaSuboru + "_osoby.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
 
+                try {
+                    Osoba osoba = Osoba.fromCSV(line);
+                    AVL_Node<Osoba> node = new AVL_Node<>(osoba, osoba);
+                    this.vlozOsobu(node);
+                } catch (Exception e) {
+                    System.err.println("Chyba pri načítaní osoby: " + line);
+                    e.printStackTrace();
+                }
+            }
+        } catch (java.io.IOException e) {
+            System.err.println("Nepodarilo sa načítať osoby CSV: " + e.getMessage());
+        }
+
+        try (java.io.BufferedReader reader =
+                     new java.io.BufferedReader(new java.io.FileReader(cestaSuboru + "_testy.csv"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                try {
+                    PCR_Test test = PCR_Test.fromCSV(line);
+                    AVL_Node<PCR_Test> node = new AVL_Node<>(test, test);
+                    this.vlozPCRTest(node);
+                } catch (Exception e) {
+                    System.err.println("Chyba pri načítaní testu: " + line);
+                    e.printStackTrace();
+                }
+            }
+        } catch (java.io.IOException e) {
+            System.err.println("Nepodarilo sa načítať testy CSV: " + e.getMessage());
+        }
     }
 
     private void vymazTestPreOsobu(AVL_Node<PCR_Test> pcrTest) {

@@ -2,13 +2,14 @@ package Data.Osoba;
 
 import Interface.IBST_Key;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class Osoba implements IBST_Key<Osoba> {
-    private String meno;
-    private String priezvisko;
-    private Date datumNarodenia;
-    private String UUID;
+    private final String meno;
+    private final String priezvisko;
+    private final Date datumNarodenia;
+    private final String UUID;
 
     public Osoba(String meno, String priezvisko, Date datumNarodenia, String UUID) {
         this.meno = meno;
@@ -16,6 +17,13 @@ public class Osoba implements IBST_Key<Osoba> {
         this.datumNarodenia = datumNarodenia;
         this.UUID = UUID;
     }
+
+    public static Osoba fromCSV(String line) throws ParseException {
+        String[] parts = line.split(",");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return new Osoba(parts[0], parts[1], sdf.parse(parts[2]), parts[3]);
+    }
+
 
     public String getMeno() {
         return this.meno;
@@ -36,5 +44,11 @@ public class Osoba implements IBST_Key<Osoba> {
     @Override
     public int compareTo(IBST_Key<Osoba> object) {
         return this.UUID.compareTo(((Osoba) object).getUUID());
+    }
+
+    @Override
+    public String toString() {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        return this.meno + "," + this.priezvisko + "," + sdf.format(this.datumNarodenia) + "," + this.UUID;
     }
 }

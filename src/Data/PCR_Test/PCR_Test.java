@@ -2,18 +2,19 @@ package Data.PCR_Test;
 
 import Interface.IBST_Key;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class PCR_Test implements IBST_Key<PCR_Test> {
-    private Date datumACasTestu;
-    private String UUIDOsoby;
-    private int kodPCR;
-    private int UUIDPracoviska;
-    private int kodOkresu;
-    private int kodKraja;
-    private boolean vysledokTestu; // true = pozitivny, false = negativny
-    private double hodnotaTestu;
-    private String poznamka;
+    private final Date datumACasTestu;
+    private final String UUIDOsoby;
+    private final int kodPCR;
+    private final int UUIDPracoviska;
+    private final int kodOkresu;
+    private final int kodKraja;
+    private final boolean vysledokTestu; // true = pozitivny, false = negativny
+    private final double hodnotaTestu;
+    private final String poznamka;
 
     public PCR_Test(Date datumACasTestu, String UUIDOsoby, int kodPCR, int UUIDPracoviska,
                     int kodOkresu, int kodKraja, boolean vysledokTestu,
@@ -27,6 +28,22 @@ public class PCR_Test implements IBST_Key<PCR_Test> {
         this.vysledokTestu = vysledokTestu;
         this.hodnotaTestu = hodnotaTestu;
         this.poznamka = poznamka;
+    }
+
+    public static PCR_Test fromCSV(String line) throws ParseException {
+        String[] parts = line.split(",");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return new PCR_Test(
+                sdf.parse(parts[0]),
+                parts[1],
+                Integer.parseInt(parts[2]),
+                Integer.parseInt(parts[3]),
+                Integer.parseInt(parts[4]),
+                Integer.parseInt(parts[5]),
+                Boolean.parseBoolean(parts[6]),
+                Double.parseDouble(parts[7]),
+                parts.length > 8 ? parts[8] : ""
+        );
     }
 
     public Date getDatumACasTestu() {
@@ -73,4 +90,19 @@ public class PCR_Test implements IBST_Key<PCR_Test> {
             throw new IllegalArgumentException("Object is not Data.PCR_Test.PCR_Test type.");
         }
     }
+
+    @Override
+    public String toString() {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(this.datumACasTestu) + "," +
+                this.UUIDOsoby + "," +
+                this.kodPCR + "," +
+                this.UUIDPracoviska + "," +
+                this.kodOkresu + "," +
+                this.kodKraja + "," +
+                this.vysledokTestu + "," +
+                this.hodnotaTestu + "," +
+                (this.poznamka == null ? "" : this.poznamka.replace(",", ";"));
+    }
+
 }
