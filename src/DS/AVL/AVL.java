@@ -16,16 +16,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         super.insert(node);
         rebalanceInsert((AVL_Node<T>) node);
     }
-
-    /** Odstránenie vrchola zo stromu
-     * @param node Vrchol na odstránenie
-     */
-    @Override
-    public void delete(BST_Node<T> node) {
-        Stack<PathItem<T>> stack = getPathToDeletedNode((AVL_Node<T>) node);
-        super.delete(node);
-        rebalanceDelete((AVL_Node<T>) node, stack);
-    }
     private void rebalanceInsert(AVL_Node<T> node) {
         while (node != null) {
             updateHeight(node);
@@ -54,6 +44,15 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             node = (AVL_Node<T>) node.getParent();
         }
     }
+    /** Odstránenie vrchola zo stromu
+     * @param node Vrchol na odstránenie
+     */
+    @Override
+    public void delete(BST_Node<T> node) {
+        Stack<PathItem<T>> stack = getPathToDeletedNode((AVL_Node<T>) node);
+        super.delete(node);
+        rebalanceDelete((AVL_Node<T>) node, stack);
+    }
 
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, od ktorého sa začína rebalancovanie
@@ -71,7 +70,7 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             updateHeight(pathNode);
             int newBalance = getBalance(pathNode);
 
-            if ((oldBalance == 0) && (Math.abs(newBalance) == 1) && (pathNode != super.root)) {
+            if ((oldBalance == 0) && (Math.abs(newBalance) == 1)) {
                 updateHeight(lastNode.node);
                 break;
             }
