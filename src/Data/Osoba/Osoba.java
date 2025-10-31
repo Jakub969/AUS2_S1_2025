@@ -36,7 +36,11 @@ public class Osoba implements IBST_Key<Osoba> {
 
     @Override
     public int compareTo(IBST_Key<Osoba> object) {
-        return this.UUID.compareTo(((Osoba) object).getUUID());
+        if (object instanceof Osoba other) {
+            return Integer.signum(this.UUID.compareTo(other.getUUID()));
+        } else {
+            throw new IllegalArgumentException("Object is not Data.Osoba.Osoba type.");
+        }
     }
 
     @Override

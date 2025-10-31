@@ -5,7 +5,7 @@ import Interface.IBST_Key;
 import java.util.Date;
 
 public class PCR_TestDatumWrapper implements IBST_Key<PCR_TestDatumWrapper> {
-    private PCR_Test test;
+    private final PCR_Test test;
 
     public PCR_TestDatumWrapper(PCR_Test test) {
         this.test = test;

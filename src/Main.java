@@ -10,7 +10,7 @@ import GUI.View.View;
 import Tests.TreeMapWrapper;
 import javafx.stage.Stage;
 //extends javafx.application.Application
-public class Main extends javafx.application.Application {
+public class Main extends javafx.application.Application{
 
     @Override
     public void start(Stage stage) {
@@ -23,13 +23,13 @@ public class Main extends javafx.application.Application {
     public static void main(String[] args) {
         launch();
 
-        /*for (int i = 0; i < 100; i++) {
+        /*for (int i = 0; i < 10000; i++) {
             long seed = System.currentTimeMillis();
             System.out.println("seed: " + seed);
-            Structure_Tester<GenerateTestData> testerBST = new Structure_Tester<>(new BST<GenerateTestData>(), seed, 20000);
+            Structure_Tester<GenerateTestData> testerBST = new Structure_Tester<>(new BST<GenerateTestData>(), seed, 200);
             testerBST.fillAndEmptyStructure();
             testerBST.randomOperationGenerator();
-            Structure_Tester<GenerateTestData> testerAVL = new Structure_Tester<>(new AVL<GenerateTestData>(), seed, 20000);
+            Structure_Tester<GenerateTestData> testerAVL = new Structure_Tester<>(new AVL<GenerateTestData>(), seed, 200);
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
         }*/

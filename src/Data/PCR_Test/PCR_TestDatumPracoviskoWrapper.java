@@ -3,7 +3,7 @@ package Data.PCR_Test;
 import Interface.IBST_Key;
 
 public class PCR_TestDatumPracoviskoWrapper implements IBST_Key<PCR_TestDatumPracoviskoWrapper> {
-    private PCR_Test test;
+    private final PCR_Test test;
 
     public PCR_TestDatumPracoviskoWrapper(PCR_Test test) {
         this.test = test;

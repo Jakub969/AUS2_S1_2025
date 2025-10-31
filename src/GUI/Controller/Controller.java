@@ -32,7 +32,7 @@ public class Controller {
         out.appendText("Generujem " + n + " záznamov...\n");
         try {
             this.model.generujData(n);
-            out.appendText("(TODO) Generátor dát ešte nie je implementovaný.\n");
+            out.appendText("Vygenerovaných" + n + "záznamov \n");
         } catch (Exception e) {
             out.appendText("Chyba pri generovaní: " + e.getMessage() + "\n");
         }
@@ -121,8 +121,7 @@ public class Controller {
     }
 
     private void op2_vyhladajVysledokTestu(Integer kodTestu, String uuid) {
-        require(kodTestu != null || uuid != null, "Zadaj kod testu alebo UUID pacienta.");
-        kodTestu = kodTestu == null ? -1 : kodTestu;
+        require(kodTestu != null && uuid != null, "Zadaj kod testu a UUID pacienta.");
         PCR_Test test = this.model.vyhladajVysledokPCRTestu(kodTestu , uuid);
         if (test != null) {
             var out = this.view.getOutputArea();
