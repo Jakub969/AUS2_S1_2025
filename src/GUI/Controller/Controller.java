@@ -32,7 +32,7 @@ public class Controller {
         out.appendText("Generujem " + n + " záznamov...\n");
         try {
             this.model.generujData(n);
-            out.appendText("Vygenerovaných" + n + "záznamov \n");
+            out.appendText("Vygenerovaných " + n + " záznamov \n");
         } catch (Exception e) {
             out.appendText("Chyba pri generovaní: " + e.getMessage() + "\n");
         }
