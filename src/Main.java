@@ -2,12 +2,14 @@ import DS.AVL.AVL;
 import DS.BST.BST;
 import Data.GenerateTestData;
 import GUI.Controller.Controller;
+import Tests.Structure_Compare;
 import Tests.Structure_Tester;
 
 import GUI.Model.Model;
 import GUI.View.View;
+import Tests.TreeMapWrapper;
 import javafx.stage.Stage;
-
+//extends javafx.application.Application
 public class Main extends javafx.application.Application {
 
     @Override
@@ -31,8 +33,8 @@ public class Main extends javafx.application.Application {
             testerAVL.fillAndEmptyStructure();
             testerAVL.randomOperationGenerator();
         }*/
-        /*
-        int pocetVkladanychPrvkov = 10000000;
+
+        /*int pocetVkladanychPrvkov = 10000000;
         int pocetMazanychPrvkov = 2000000;
         int pocetHladanychPrvkov = 5000000;
         int pocetPrvkovPreIntervaloveHladanie = 1000000;

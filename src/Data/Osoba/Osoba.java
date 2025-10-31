@@ -18,13 +18,6 @@ public class Osoba implements IBST_Key<Osoba> {
         this.UUID = UUID;
     }
 
-    public static Osoba fromCSV(String line) throws ParseException {
-        String[] parts = line.split(",");
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        return new Osoba(parts[0], parts[1], sdf.parse(parts[2]), parts[3]);
-    }
-
-
     public String getMeno() {
         return this.meno;
     }

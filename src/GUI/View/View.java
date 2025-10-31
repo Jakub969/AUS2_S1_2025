@@ -23,6 +23,7 @@ public class View {
     private final TextField tfPocetDni;
     private final DatePicker dpDatumOd;
     private final DatePicker dpDatumDo;
+    private final TextField tfIdTestu;
 
     public View(Stage stage) {
         this.outputArea = new TextArea();
@@ -37,7 +38,6 @@ public class View {
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         title.setAlignment(Pos.CENTER);
 
-        // ===== VSTUPNÉ POLE PARAMETROV =====
         GridPane inputGrid = new GridPane();
         inputGrid.setHgap(10);
         inputGrid.setVgap(8);
@@ -50,6 +50,7 @@ public class View {
         this.tfPocetDni = new TextField();
         this.tfPacientID = new TextField();
         this.tfPocetDat = new TextField();
+        this.tfIdTestu = new TextField();
 
         inputGrid.add(new Label("Dátum od:"), 0, 0);
         inputGrid.add(this.dpDatumOd, 1, 0);
@@ -71,20 +72,21 @@ public class View {
         inputGrid.add(new Label("Počet dát (pre generátor):"), 2, 3);
         inputGrid.add(this.tfPocetDat, 3, 3);
 
-        // ===== HLAVNÉ TLAČIDLÁ =====
+        inputGrid.add(new Label("ID testu:"), 0, 4);
+        inputGrid.add(this.tfIdTestu, 1, 4);
+
         HBox fileButtons = new HBox(10);
-        Button btnGenerate = new Button("Vygeneruj dáta");
         Button btnSaveCSV = new Button("Ulož do CSV");
         Button btnLoadCSV = new Button("Načítaj z CSV");
+        Button btnGenerate = new Button("Vygeneruj dáta");
 
-        fileButtons.getChildren().addAll(btnGenerate, btnSaveCSV, btnLoadCSV);
-        fileButtons.setAlignment(Pos.CENTER);
+        fileButtons.getChildren().addAll(btnSaveCSV, btnLoadCSV, btnGenerate);
+        fileButtons.setAlignment(Pos.CENTER_LEFT);
 
         btnGenerate.setOnAction(e -> handleGenerate());
         btnSaveCSV.setOnAction(e -> handleSaveCSV());
         btnLoadCSV.setOnAction(e -> handleLoadCSV());
 
-        // ===== OPERÁCIE (21 tlačidiel) =====
         GridPane operationsGrid = new GridPane();
         operationsGrid.setHgap(10);
         operationsGrid.setVgap(8);
@@ -123,11 +125,9 @@ public class View {
             if (row % 7 == 0) { col++; row = 0; }
         }
 
-        // ===== VÝSTUP =====
         VBox outputBox = new VBox(5);
         outputBox.getChildren().addAll(new Label("Výstup:"), this.outputArea);
 
-        // ===== CELKOVÝ LAYOUT =====
         root.getChildren().addAll(title, inputGrid, fileButtons, new Separator(), operationsGrid, new Separator(), outputBox);
 
         Scene scene = new Scene(root, 1300, 850);
@@ -140,8 +140,7 @@ public class View {
         this.controller = controller;
     }
 
-    // ================== HANDLERY ==================
-
+    //handlery
     private void handleGenerate() {
         this.controller.onGenerate(Integer.parseInt(this.tfPocetDat.getText().trim()));
     }
@@ -179,15 +178,16 @@ public class View {
 
     private void handleOperation(String op) {
         this.outputArea.clear();
-        controller.onOperation(
+        this.controller.onOperation(
                 op,
-                dpDatumOd.getValue() == null ? null : java.sql.Date.valueOf(dpDatumOd.getValue()),
-                dpDatumDo.getValue() == null ? null : java.sql.Date.valueOf(dpDatumDo.getValue()),
-                tfOkres.getText().isEmpty() ? null : Integer.parseInt(tfOkres.getText()),
-                tfKraj.getText().isEmpty() ? null : Integer.parseInt(tfKraj.getText()),
-                tfPracovisko.getText().isEmpty() ? null : Integer.parseInt(tfPracovisko.getText()),
-                tfPocetDni.getText().isEmpty() ? null : Integer.parseInt(tfPocetDni.getText()),
-                tfPacientID.getText().trim().isEmpty() ? null : tfPacientID.getText().trim()
+                this.dpDatumOd.getValue() == null ? null : java.sql.Date.valueOf(this.dpDatumOd.getValue()),
+                this.dpDatumDo.getValue() == null ? null : java.sql.Date.valueOf(this.dpDatumDo.getValue()),
+                this.tfOkres.getText().isEmpty() ? null : Integer.parseInt(this.tfOkres.getText()),
+                this.tfKraj.getText().isEmpty() ? null : Integer.parseInt(this.tfKraj.getText()),
+                this.tfPracovisko.getText().isEmpty() ? null : Integer.parseInt(this.tfPracovisko.getText()),
+                this.tfPocetDni.getText().isEmpty() ? null : Integer.parseInt(this.tfPocetDni.getText()),
+                this.tfPacientID.getText().trim().isEmpty() ? null : this.tfPacientID.getText().trim(),
+                this.tfIdTestu.getText().isEmpty() ? null : Integer.parseInt(this.tfIdTestu.getText())
         );
     }
 

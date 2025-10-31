@@ -30,22 +30,6 @@ public class PCR_Test implements IBST_Key<PCR_Test> {
         this.poznamka = poznamka;
     }
 
-    public static PCR_Test fromCSV(String line) throws ParseException {
-        String[] parts = line.split(",");
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return new PCR_Test(
-                sdf.parse(parts[0]),
-                parts[1],
-                Integer.parseInt(parts[2]),
-                Integer.parseInt(parts[3]),
-                Integer.parseInt(parts[4]),
-                Integer.parseInt(parts[5]),
-                Boolean.parseBoolean(parts[6]),
-                Double.parseDouble(parts[7]),
-                parts.length > 8 ? parts[8] : ""
-        );
-    }
-
     public Date getDatumACasTestu() {
         return this.datumACasTestu;
     }

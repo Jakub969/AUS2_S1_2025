@@ -31,19 +31,19 @@ public class PCR_TestForm {
         TextField tfUUIDPracoviska = new TextField();
         TextField tfKodOkresu = new TextField();
         TextField tfKodKraja = new TextField();
-        CheckBox cbPozitivny = new CheckBox("Pozitívny výsledok");
+        CheckBox cbPozitivny = new CheckBox();
         TextField tfHodnota = new TextField();
         TextField tfPoznamka = new TextField();
 
         int row = 0;
         grid.addRow(row++, new Label("Dátum testu:"), dpDatum);
-        grid.addRow(row++, new Label("Čas testu (HH:mm:ss):"), tfCas);
+        grid.addRow(row++, new Label("Čas testu:"), tfCas);
         grid.addRow(row++, new Label("UUID osoby:"), tfUUIDOsoby);
         grid.addRow(row++, new Label("Kód PCR:"), tfKodPCR);
         grid.addRow(row++, new Label("UUID pracoviska:"), tfUUIDPracoviska);
         grid.addRow(row++, new Label("Kód okresu:"), tfKodOkresu);
         grid.addRow(row++, new Label("Kód kraja:"), tfKodKraja);
-        grid.addRow(row++, cbPozitivny);
+        grid.addRow(row++, new Label("Pozitívny výsledok"),cbPozitivny);
         grid.addRow(row++, new Label("Hodnota testu:"), tfHodnota);
         grid.addRow(row++, new Label("Poznámka:"), tfPoznamka);
 
