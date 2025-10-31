@@ -52,7 +52,7 @@ public class Controller {
         var out = this.view.getOutputArea();
         try {
             this.model.nacitajZCSV(basePathWithoutExt);
-            out.appendText("Dáta načítané z: " + basePathWithoutExt + "_osoby.csv a " + basePathWithoutExt + "_testy.csv\n");
+            out.appendText("Dáta načítané z: " + basePathWithoutExt + "_osoby a " + basePathWithoutExt + "_testy\n");
         } catch (Exception e) {
             out.appendText("Chyba pri načítaní CSV: " + e.getMessage() + "\n");
         }

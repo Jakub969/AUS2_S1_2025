@@ -77,7 +77,7 @@ public class PCR_Test implements IBST_Key<PCR_Test> {
 
     @Override
     public String toString() {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return sdf.format(this.datumACasTestu) + "," +
                 this.UUIDOsoby + "," +
                 this.kodPCR + "," +

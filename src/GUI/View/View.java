@@ -83,9 +83,9 @@ public class View {
         fileButtons.getChildren().addAll(btnSaveCSV, btnLoadCSV, btnGenerate);
         fileButtons.setAlignment(Pos.CENTER_LEFT);
 
-        btnGenerate.setOnAction(e -> handleGenerate());
         btnSaveCSV.setOnAction(e -> handleSaveCSV());
         btnLoadCSV.setOnAction(e -> handleLoadCSV());
+        btnGenerate.setOnAction(e -> handleGenerate());
 
         GridPane operationsGrid = new GridPane();
         operationsGrid.setHgap(10);
@@ -154,8 +154,12 @@ public class View {
 
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
-            this.outputArea.appendText("Ukladám dáta do súboru: " + file.getAbsolutePath() + "\n");
-            this.controller.onSaveCSV(file.getAbsolutePath());
+            String path = file.getAbsolutePath();
+
+            if (path.endsWith(".csv")) {
+                path = path.substring(0, path.length() - ".csv".length());
+            }
+            this.controller.onSaveCSV(path);
         } else {
             this.outputArea.appendText("Ukladanie zrušené používateľom.\n");
         }
@@ -165,12 +169,20 @@ public class View {
         this.outputArea.clear();
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Načítaj CSV súbor");
+        fileChooser.setTitle("Vyber súbor _osoby.csv alebo _testy.csv");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV súbory (*.csv)", "*.csv"));
 
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
-            this.controller.onLoadCSV(file.getAbsolutePath());
+            String path = file.getAbsolutePath();
+
+            if (path.endsWith(".csv_osoby")) {
+                path = path.substring(0, path.length() - ".csv_osoby".length());
+            } else{
+                path = path.substring(0, path.length() - ".csv_osoby".length());
+            }
+
+            this.controller.onLoadCSV(path);
         } else {
             this.outputArea.appendText("Načítanie zrušené používateľom.\n");
         }
