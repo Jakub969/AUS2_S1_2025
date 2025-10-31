@@ -31,7 +31,7 @@ public class Controller {
         var out = this.view.getOutputArea();
         out.appendText("Generujem " + n + " záznamov...\n");
         try {
-            // TODO: doplň podľa tvojej implementácie generátora dát, napr. model.vygenerujData(n);
+            this.model.generujData(n);
             out.appendText("(TODO) Generátor dát ešte nie je implementovaný.\n");
         } catch (Exception e) {
             out.appendText("Chyba pri generovaní: " + e.getMessage() + "\n");
