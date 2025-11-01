@@ -16,9 +16,9 @@ public class PCR_TestDatumPracoviskoWrapper implements IBST_Key<PCR_TestDatumPra
     @Override
     public int compareTo(IBST_Key<PCR_TestDatumPracoviskoWrapper> object) {
         if (object instanceof PCR_TestDatumPracoviskoWrapper other) {
-            int cmp = this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
+            int cmp = Integer.compare(this.test.getUUIDPracoviska(), other.getTest().getUUIDPracoviska());
             if (cmp == 0) {
-                return Integer.compare(this.test.getUUIDPracoviska(), other.getTest().getUUIDPracoviska());
+                return this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
             }
             return cmp;
         } else {

@@ -21,6 +21,8 @@ public class Model {
     private AVL<PCR_TestKrajDatumWrapper> pcrPozitivneTestsKrajDatumAVL;
     private AVL<PCR_TestKrajDatumWrapper> pcrTestsKrajDatumAVL;
     private AVL<PCR_TestUUIDOsobyKodTestuWrapper> pcrTestUUIDOsobyKodTestuWrapperAVL;
+    private AVL<PCR_TestDatumKrajWrapper> pcrTestsPozitivneDatumKrajAVL;
+    private AVL<PCR_TestDatumOkresWrapper> pcrTestPozitivneDatumOkresAVL;
 
 
     public Model() {
@@ -36,6 +38,8 @@ public class Model {
         this.pcrPozitivneTestsKrajDatumAVL = new AVL<>();
         this.pcrTestsKrajDatumAVL = new AVL<>();
         this.pcrTestUUIDOsobyKodTestuWrapperAVL = new AVL<>();
+        this.pcrTestsPozitivneDatumKrajAVL = new AVL<>();
+        this.pcrTestPozitivneDatumOkresAVL = new AVL<>();
     }
     //1
     public void vlozPCRTest(Date datumACasTestu, String UUIDOsoby, int kodPCR,
@@ -63,6 +67,10 @@ public class Model {
             this.pcrPozitivneTestsDatumAVL.insert(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
             this.pcrPozitivneTestsOkresDatumAVL.insert(new AVL_Node<>(okresDatumWrapper, okresDatumWrapper));
             this.pcrPozitivneTestsKrajDatumAVL.insert(new AVL_Node<>(krajDatumWrapper, krajDatumWrapper));
+            PCR_TestDatumKrajWrapper testDatumKrajWrapper = new PCR_TestDatumKrajWrapper(test);
+            PCR_TestDatumOkresWrapper testDatumOkresWrapper = new PCR_TestDatumOkresWrapper(test);
+            this.pcrTestPozitivneDatumOkresAVL.insert(new AVL_Node<>(testDatumOkresWrapper, testDatumOkresWrapper));
+            this.pcrTestsPozitivneDatumKrajAVL.insert(new AVL_Node<>(testDatumKrajWrapper, testDatumKrajWrapper));
         } else {
             this.pcrNegativneTestsDatumAVL.insert(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
         }
@@ -266,9 +274,9 @@ public class Model {
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, 0, true, 0, "");
         PCR_Test high = new PCR_Test(datumDo, "", 0, 0, Integer.MAX_VALUE, 0, true, 0, "");
-        PCR_TestOkresDatumWrapper wLow = new PCR_TestOkresDatumWrapper(low);
-        PCR_TestOkresDatumWrapper wHigh = new PCR_TestOkresDatumWrapper(high);
-        ArrayList<BST_Node<PCR_TestOkresDatumWrapper>> nodes = this.pcrPozitivneTestsOkresDatumAVL.rangeSearch(wLow, wHigh);
+        PCR_TestDatumOkresWrapper wLow = new PCR_TestDatumOkresWrapper(low);
+        PCR_TestDatumOkresWrapper wHigh = new PCR_TestDatumOkresWrapper(high);
+        ArrayList<BST_Node<PCR_TestDatumOkresWrapper>> nodes = this.pcrTestPozitivneDatumOkresAVL.rangeSearch(wLow, wHigh);
         nodes.sort((n1,n2)-> {
             int kodOkresu1 = n1.getData().getTest().getKodOkresu();
             int kodOkresu2 = n2.getData().getTest().getKodOkresu();
@@ -296,9 +304,9 @@ public class Model {
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, 0, true, 0, "");
         PCR_Test high = new PCR_Test(datumDo, "", 0, 0, 0, Integer.MAX_VALUE, true, 0, "");
-        PCR_TestKrajDatumWrapper wLow = new PCR_TestKrajDatumWrapper(low);
-        PCR_TestKrajDatumWrapper wHigh = new PCR_TestKrajDatumWrapper(high);
-        ArrayList<BST_Node<PCR_TestKrajDatumWrapper>> nodes = this.pcrPozitivneTestsKrajDatumAVL.rangeSearch(wLow, wHigh);
+        PCR_TestDatumKrajWrapper wLow = new PCR_TestDatumKrajWrapper(low);
+        PCR_TestDatumKrajWrapper wHigh = new PCR_TestDatumKrajWrapper(high);
+        ArrayList<BST_Node<PCR_TestDatumKrajWrapper>> nodes = this.pcrTestsPozitivneDatumKrajAVL.rangeSearch(wLow, wHigh);
         nodes.sort((n1,n2)-> {
             int kodKraja1 = n1.getData().getTest().getKodKraja();
             int kodKraja2 = n2.getData().getTest().getKodKraja();
@@ -322,8 +330,8 @@ public class Model {
     //17
     public ArrayList<PCR_Test> vypisTestovPreDatumAPracovisko(int kodPracoviska, Date dat_od, Date dat_do) {
         ArrayList<PCR_Test> result = new ArrayList<>();
-        PCR_Test low = new PCR_Test(dat_od, "", kodPracoviska, 0, 0, 0, false, 0, "");
-        PCR_Test high = new PCR_Test(dat_do, "", kodPracoviska, 0, 0, 0, false, 0, "");
+        PCR_Test low = new PCR_Test(dat_od, "", 0, kodPracoviska, 0, 0, false, 0, "");
+        PCR_Test high = new PCR_Test(dat_do, "", 0, kodPracoviska, 0, 0, false, 0, "");
         PCR_TestDatumPracoviskoWrapper wLow = new PCR_TestDatumPracoviskoWrapper(low);
         PCR_TestDatumPracoviskoWrapper wHigh = new PCR_TestDatumPracoviskoWrapper(high);
         ArrayList<BST_Node<PCR_TestDatumPracoviskoWrapper>> nodes = this.pcrTestsDatumPracoviskoAVL.rangeSearch(wLow, wHigh);
@@ -348,39 +356,44 @@ public class Model {
     public void vymazPCRTest(int kodPCR) {
         PCR_Test dummy = new PCR_Test(new Date(), "", kodPCR, 0, 0, 0, false, 0.0, "");
         AVL_Node<PCR_Test> node = new AVL_Node<>(dummy, dummy);
-        AVL_Node<PCR_Test> deletedNode = (AVL_Node<PCR_Test>) this.pcrTestsAVL.search(node.getKey());
+        AVL_Node<PCR_Test> deletedNode = (AVL_Node<PCR_Test>) this.pcrTestsAVL.search(node.getData());
         if (deletedNode != null) {
             vymazTestPreOsobu(deletedNode);
         }
     }
     private void vymazTestPreOsobu(AVL_Node<PCR_Test> pcrTest) {
-        this.pcrTestsAVL.delete(pcrTest);
-        PCR_TestDatumWrapper testDatumWrapper = new PCR_TestDatumWrapper(pcrTest.getData());
-        this.pcrTestsDatumAVL.delete(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
-        PCR_TestOkresDatumWrapper okresDatumWrapper = new PCR_TestOkresDatumWrapper(pcrTest.getData());
-        this.pcrTestOkresDatumAVL.delete(new AVL_Node<>(okresDatumWrapper, okresDatumWrapper));
-        PCR_TestKrajDatumWrapper krajDatumWrapper = new PCR_TestKrajDatumWrapper(pcrTest.getData());
-        this.pcrTestsKrajDatumAVL.delete(new AVL_Node<>(krajDatumWrapper, krajDatumWrapper));
-        PCR_TestDatumPracoviskoWrapper testDatumPracoviskoWrapper = new PCR_TestDatumPracoviskoWrapper(pcrTest.getData());
-        this.pcrTestsDatumPracoviskoAVL.delete(new AVL_Node<>(testDatumPracoviskoWrapper, testDatumPracoviskoWrapper));
-        if (pcrTest.getData().isVysledokTestu()) {
-            this.pcrPozitivneTestsDatumAVL.delete(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
-            this.pcrPozitivneTestsOkresDatumAVL.delete(new AVL_Node<>(okresDatumWrapper, okresDatumWrapper));
-            this.pcrPozitivneTestsKrajDatumAVL.delete(new AVL_Node<>(krajDatumWrapper, krajDatumWrapper));
+        PCR_Test test = pcrTest.getData();
+        PCR_TestDatumWrapper testDatumWrapper = new PCR_TestDatumWrapper(test);
+        this.pcrTestsDatumAVL.delete(this.pcrTestsDatumAVL.search(testDatumWrapper));
+        PCR_TestOkresDatumWrapper okresDatumWrapper = new PCR_TestOkresDatumWrapper(test);
+        this.pcrTestOkresDatumAVL.delete(this.pcrTestOkresDatumAVL.search(okresDatumWrapper));
+        PCR_TestKrajDatumWrapper krajDatumWrapper = new PCR_TestKrajDatumWrapper(test);
+        this.pcrTestsKrajDatumAVL.delete(this.pcrTestsKrajDatumAVL.search(krajDatumWrapper));
+        PCR_TestDatumPracoviskoWrapper testDatumPracoviskoWrapper = new PCR_TestDatumPracoviskoWrapper(test);
+        this.pcrTestsDatumPracoviskoAVL.delete(this.pcrTestsDatumPracoviskoAVL.search(testDatumPracoviskoWrapper));
+        if (test.isVysledokTestu()) {
+            this.pcrPozitivneTestsDatumAVL.delete(this.pcrPozitivneTestsDatumAVL.search(testDatumWrapper));
+            this.pcrPozitivneTestsOkresDatumAVL.delete(this.pcrPozitivneTestsOkresDatumAVL.search(okresDatumWrapper));
+            this.pcrPozitivneTestsKrajDatumAVL.delete(this.pcrPozitivneTestsKrajDatumAVL.search(krajDatumWrapper));
+            PCR_TestDatumOkresWrapper testDatumOkresWrapper = new PCR_TestDatumOkresWrapper(test);
+            this.pcrTestPozitivneDatumOkresAVL.delete(this.pcrTestPozitivneDatumOkresAVL.search(testDatumOkresWrapper));
+            PCR_TestDatumKrajWrapper testDatumKrajWrapper = new PCR_TestDatumKrajWrapper(test);
+            this.pcrTestsPozitivneDatumKrajAVL.delete(this.pcrTestsPozitivneDatumKrajAVL.search(testDatumKrajWrapper));
         } else {
-            this.pcrNegativneTestsDatumAVL.delete(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
+            this.pcrNegativneTestsDatumAVL.delete(this.pcrNegativneTestsDatumAVL.search(testDatumWrapper));
         }
-        PCR_TestUUIDOsobyDatumWrapper testUUIDOsobyWrapper = new PCR_TestUUIDOsobyDatumWrapper(pcrTest.getData());
-        this.pcrTestUUIDOsobyDatumWrapperAVL.delete(new AVL_Node<>(testUUIDOsobyWrapper, testUUIDOsobyWrapper));
-        PCR_TestUUIDOsobyKodTestuWrapper testUUIDOsobyKodTestuWrapper = new PCR_TestUUIDOsobyKodTestuWrapper(pcrTest.getData());
-        this.pcrTestUUIDOsobyKodTestuWrapperAVL.delete(new AVL_Node<>(testUUIDOsobyKodTestuWrapper, testUUIDOsobyKodTestuWrapper));
+        PCR_TestUUIDOsobyDatumWrapper testUUIDOsobyWrapper = new PCR_TestUUIDOsobyDatumWrapper(test);
+        this.pcrTestUUIDOsobyDatumWrapperAVL.delete(this.pcrTestUUIDOsobyDatumWrapperAVL.search(testUUIDOsobyWrapper));
+        PCR_TestUUIDOsobyKodTestuWrapper testUUIDOsobyKodTestuWrapper = new PCR_TestUUIDOsobyKodTestuWrapper(test);
+        this.pcrTestUUIDOsobyKodTestuWrapperAVL.delete(this.pcrTestUUIDOsobyKodTestuWrapperAVL.search(testUUIDOsobyKodTestuWrapper));
+        this.pcrTestsAVL.delete(pcrTest);
     }
     //21
     public void vymazOsobu(String UUID) {
         Osoba osoba = new Osoba("", "", new Date(), UUID);
         AVL_Node<Osoba> nodeOsoba = new AVL_Node<>(osoba, osoba);
-        PCR_Test dummyLow = new PCR_Test(new Date(), nodeOsoba.getData().getUUID(), 0, 0, 0, 0, false, 0, "");
-        PCR_Test dummyHigh = new PCR_Test(new Date(), nodeOsoba.getData().getUUID(), 0, 0, 0, 0, false, 0, "");
+        PCR_Test dummyLow = new PCR_Test(new Date(Long.MIN_VALUE), nodeOsoba.getData().getUUID(), 0, 0, 0, 0, false, 0, "");
+        PCR_Test dummyHigh = new PCR_Test(new Date(Long.MAX_VALUE), nodeOsoba.getData().getUUID(), 0, 0, 0, 0, false, 0, "");
         PCR_TestUUIDOsobyDatumWrapper wLow = new PCR_TestUUIDOsobyDatumWrapper(dummyLow);
         PCR_TestUUIDOsobyDatumWrapper wHigh = new PCR_TestUUIDOsobyDatumWrapper(dummyHigh);
 
@@ -415,6 +428,8 @@ public class Model {
         this.pcrPozitivneTestsKrajDatumAVL = new AVL<>();
         this.pcrTestsKrajDatumAVL = new AVL<>();
         this.pcrTestUUIDOsobyKodTestuWrapperAVL = new AVL<>();
+        this.pcrTestsPozitivneDatumKrajAVL = new AVL<>();
+        this.pcrTestPozitivneDatumOkresAVL = new AVL<>();
         this.osobyAVL.importFromFile(cestaSuboru + "_osoby.csv", Osoba::fromCSV);
 
         try (java.io.BufferedReader reader =

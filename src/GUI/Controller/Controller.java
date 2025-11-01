@@ -256,6 +256,7 @@ public class Controller {
                     DT.format(t.getDatumACasTestu()) +
                             ", UUID=" + t.getUUIDOsoby() +
                             ", kodPCR=" + t.getKodPCR() +
+                            ", pracovisko=" + t.getUUIDPracoviska() +
                             ", okres=" + t.getKodOkresu() +
                             ", kraj=" + t.getKodKraja() +
                             ", vysledok=" + (t.isVysledokTestu() ? "pozitívny" : "negatívny") +
