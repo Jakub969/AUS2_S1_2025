@@ -3,6 +3,7 @@ package Data.Osoba;
 import Interface.IBST_Key;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Osoba implements IBST_Key<Osoba> {
@@ -47,5 +48,16 @@ public class Osoba implements IBST_Key<Osoba> {
     public String toString() {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
         return this.meno + "," + this.priezvisko + "," + sdf.format(this.datumNarodenia) + "," + this.UUID;
+    }
+
+    public static Osoba fromCSV(String line) {
+        try {
+            String[] parts = line.split(",");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date d = sdf.parse(parts[2]);
+            return new Osoba(parts[0], parts[1], d, parts[3]);
+        } catch (Exception e) {
+            throw new RuntimeException("Chybný riadok v CSV: " + line, e);
+        }
     }
 }

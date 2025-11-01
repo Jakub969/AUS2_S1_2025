@@ -192,8 +192,8 @@ public class View {
         this.outputArea.clear();
         this.controller.onOperation(
                 op,
-                this.dpDatumOd.getValue() == null ? null : java.sql.Date.valueOf(this.dpDatumOd.getValue()),
-                this.dpDatumDo.getValue() == null ? null : java.sql.Date.valueOf(this.dpDatumDo.getValue()),
+                this.dpDatumOd.getValue() == null ? null : java.sql.Timestamp.valueOf(this.dpDatumOd.getValue().atStartOfDay()),
+                this.dpDatumDo.getValue() == null ? null : java.sql.Timestamp.valueOf(this.dpDatumDo.getValue().plusDays(1).atStartOfDay()),
                 this.tfOkres.getText().isEmpty() ? null : Integer.parseInt(this.tfOkres.getText()),
                 this.tfKraj.getText().isEmpty() ? null : Integer.parseInt(this.tfKraj.getText()),
                 this.tfPracovisko.getText().isEmpty() ? null : Integer.parseInt(this.tfPracovisko.getText()),

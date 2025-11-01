@@ -234,6 +234,11 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         }
         return compareLeftRightSubtreeHeights((AVL_Node<T>) node.getLeft_child()) && compareLeftRightSubtreeHeights((AVL_Node<T>) node.getRight_child());
     }
+
+    @Override
+    protected BST_Node<T> createNode(T key, T data) {
+        return new AVL_Node<>(key, data);
+    }
 }
 
 class PathItem<T extends IBST_Key<T>> {

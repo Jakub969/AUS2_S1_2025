@@ -1,4 +1,4 @@
-package Data;
+package Tests;
 
 import Interface.IBST_Key;
 
@@ -18,7 +18,7 @@ public class GenerateTestData implements IBST_Key<GenerateTestData>, Comparable<
         if (object instanceof GenerateTestData other) {
             return Integer.compare(this.integer, other.integer);
         } else {
-            throw new IllegalArgumentException("Object is not Data.GenerateTestData type.");
+            throw new IllegalArgumentException("Object is not Tests.GenerateTestData type.");
         }
     }
 
@@ -32,7 +32,7 @@ public class GenerateTestData implements IBST_Key<GenerateTestData>, Comparable<
         if (o instanceof GenerateTestData other) {
             return Integer.compare(this.integer, other.integer);
         } else {
-            throw new IllegalArgumentException("Object is not Data.GenerateTestData type.");
+            throw new IllegalArgumentException("Object is not Tests.GenerateTestData type.");
         }
     }
 }

@@ -123,9 +123,10 @@ public class Controller {
     private void op2_vyhladajVysledokTestu(Integer kodTestu, String uuid) {
         require(kodTestu != null && uuid != null, "Zadaj kod testu a UUID pacienta.");
         PCR_Test test = this.model.vyhladajVysledokPCRTestu(kodTestu , uuid);
+        Osoba osoba = this.model.vyhladajOsobuPodlaUUID(uuid);
         if (test != null) {
             var out = this.view.getOutputArea();
-            out.appendText("Nájdený test: " + test + "\n");
+            out.appendText("Nájdený test: " + test + " " + osoba +"\n");
         } else {
             this.view.getOutputArea().appendText("Test nebol nájdený.\n");
         }
@@ -134,7 +135,7 @@ public class Controller {
     private void op3_vypisTestyPreOsobu(String uuid) {
         require(uuid != null && !uuid.isEmpty(), "Zadaj UUID pacienta.");
         ArrayList<PCR_Test> tests = this.model.vyhladajVsetkyTestyPreOsobu(uuid);
-        printTests(tests);
+        printTestySOsobami(tests);
     }
 
     private void op4_5(boolean pozitivne, Integer kodOkresu, Date od, Date to) {
@@ -143,7 +144,7 @@ public class Controller {
         ArrayList<PCR_Test> res = pozitivne
                 ? this.model.vyhladajPozitivneTestyPreDatumAOkres(kodOkresu, od, to)
                 : this.model.vyhladajTestyPreDatumAOkres(kodOkresu, od, to);
-        printTests(res);
+        printTestySOsobami(res);
     }
 
     private void op6_7(boolean pozitivne, Integer kodKraja, Date od, Date to) {
@@ -152,7 +153,7 @@ public class Controller {
         ArrayList<PCR_Test> res = pozitivne
                 ? this.model.vyhladajPozitivneTestyPreDatumAKraj(kodKraja, od, to)
                 : this.model.vyhladajTestyPreDatumAKraj(kodKraja, od, to);
-        printTests(res);
+        printTestySOsobami(res);
     }
 
     private void op8_9(boolean pozitivne, Date od, Date to) {
@@ -160,37 +161,37 @@ public class Controller {
         ArrayList<PCR_Test> res = pozitivne
                 ? this.model.vyhladajPozitivneTestyPreDatum(od, to)
                 : this.model.vyhladajTestyPreDatum(od, to);
-        printTests(res);
+        printTestySOsobami(res);
     }
 
     private void op10(Date datum, Integer dni, Integer okres) {
         require(datum != null && dni != null && okres != null, "Zadaj dátum, dni a okres.");
-        ArrayList<Osoba> res = this.model.vypisChorychOsobPreDatumAOkres(okres, datum, dni);
-        printOsoby(res);
+        ArrayList<PCR_Test> res = this.model.vypisChorychOsobPreDatumAOkres(okres, datum, dni);
+        printTestySOsobami(res);
     }
 
     private void op11(Date datum, Integer dni, Integer okres) {
         require(datum != null && dni != null && okres != null, "Zadaj dátum, dni a okres.");
-        ArrayList<Osoba> res = this.model.vypisChorychOsobPreDatumAOkresUsporiadaneHodnotouTestu(okres, datum, dni);
-        printOsoby(res);
+        ArrayList<PCR_Test> res = this.model.vypisChorychOsobPreDatumAOkresUsporiadaneHodnotouTestu(okres, datum, dni);
+        printTestySOsobami(res);
     }
 
     private void op12(Date datum, Integer dni, Integer kraj) {
         require(datum != null && dni != null && kraj != null, "Zadaj dátum, dni a kraj.");
-        ArrayList<Osoba> res = this.model.vypisChorychOsobPreDatumAKraj(kraj, datum, dni);
-        printOsoby(res);
+        ArrayList<PCR_Test> res = this.model.vypisChorychOsobPreDatumAKraj(kraj, datum, dni);
+        printTestySOsobami(res);
     }
 
     private void op13(Date datum, Integer dni) {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
-        ArrayList<Osoba> res = this.model.vypisChorychOsobPreDatum(datum, dni);
-        printOsoby(res);
+        ArrayList<PCR_Test> res = this.model.vypisChorychOsobPreDatum(datum, dni);
+        printTestySOsobami(res);
     }
 
     private void op14(Date datum, Integer dni) {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
-        ArrayList<Osoba> res = this.model.vypisOsobyPreDatumKazdyOkresSNajvyssouHodnotouTestu(datum, dni);
-        printOsoby(res);
+        ArrayList<PCR_Test> res = this.model.vypisOsobyPreDatumKazdyOkresSNajvyssouHodnotouTestu(datum, dni);
+        printTestySOsobami(res);
     }
 
     private void op15(Date datum, Integer dni) {
@@ -210,15 +211,16 @@ public class Controller {
     private void op17(Integer prac, Date od, Date to) {
         require(prac != null && od != null && to != null, "Zadaj kód pracoviska a dátum od/do.");
         ArrayList<PCR_Test> res = this.model.vypisTestovPreDatumAPracovisko(prac, od, to);
-        printTests(res);
+        printTestySOsobami(res);
     }
 
     private void op18(Integer kodTestu) {
         require(kodTestu != null, "Zadaj kód PCR testu.");
         PCR_Test test = this.model.vyhladaniePCRTestu(kodTestu);
+        Osoba osoba = test != null ? this.model.vyhladajOsobuPodlaUUID(test.getUUIDOsoby()) : null;
         var out = this.view.getOutputArea();
         if (test != null) {
-            out.appendText("Nájdený test: " + test + "\n");
+            out.appendText("Nájdený test: " + test + " " + osoba + "\n");
         } else {
             out.appendText("Test nebol nájdený.\n");
         }
@@ -241,27 +243,28 @@ public class Controller {
         this.model.vymazOsobu(uuid);
         this.view.getOutputArea().appendText("Osoba s UUID " + uuid + " bola vymazaná.\n");
     }
-    //Pomocné výstupy
-    private void printTests(ArrayList<PCR_Test> tests) {
-        var out = this.view.getOutputArea();
-        out.appendText("Počet záznamov: " + (tests == null ? 0 : tests.size()) + "\n");
-        if (tests == null) return;
-        for (PCR_Test t : tests) {
-            out.appendText(DT.format(t.getDatumACasTestu()) + ", UUID=" + t.getUUIDOsoby() +
-                    ", kodPCR=" + t.getKodPCR() + ", okres=" + t.getKodOkresu() + ", kraj=" + t.getKodKraja() +
-                    ", pozitívny=" + t.isVysledokTestu() + ", hodnota=" + t.getHodnotaTestu() +
-                    (t.getPoznamka() == null || t.getPoznamka().isEmpty() ? "" : ", pozn.: " + t.getPoznamka()) +
-                    "\n");
-        }
-    }
+    //Pomocný výstup
 
-    private void printOsoby(ArrayList<Osoba> osoby) {
+    private void printTestySOsobami(ArrayList<PCR_Test> testy) {
         var out = this.view.getOutputArea();
-        out.appendText("Počet osôb: " + (osoby == null ? 0 : osoby.size()) + "\n");
-        if (osoby == null) return;
-        for (Osoba o : osoby) {
-            out.appendText(o.getUUID() + ": " + o.getMeno() + " " + o.getPriezvisko() +
-                    ", nar.: " + (o.getDatumNarodenia() == null ? "?" : D.format(o.getDatumNarodenia())) + "\n");
+        out.appendText("Počet záznamov: " + (testy == null ? 0 : testy.size()) + "\n");
+        if (testy == null || testy.isEmpty()) return;
+
+        for (PCR_Test t : testy) {
+            Osoba o = this.model.vyhladajOsobuPodlaUUID(t.getUUIDOsoby());
+            out.appendText(
+                    DT.format(t.getDatumACasTestu()) +
+                            ", UUID=" + t.getUUIDOsoby() +
+                            ", kodPCR=" + t.getKodPCR() +
+                            ", okres=" + t.getKodOkresu() +
+                            ", kraj=" + t.getKodKraja() +
+                            ", vysledok=" + (t.isVysledokTestu() ? "pozitívny" : "negatívny") +
+                            ", hodnota=" + t.getHodnotaTestu() +
+                            (t.getPoznamka() == null || t.getPoznamka().isEmpty() ? "" : ", pozn.: " + t.getPoznamka()) +
+                            (o == null ? "" : " | " + o.getUUID() + ", " + o.getMeno() + " " + o.getPriezvisko() +
+                                    ", nar. " + (o.getDatumNarodenia() == null ? "?" : D.format(o.getDatumNarodenia()))) +
+                            "\n"
+            );
         }
     }
 

@@ -170,8 +170,8 @@ public class Model {
         return result;
     }
     //10
-    public ArrayList<Osoba> vypisChorychOsobPreDatumAOkres(int kodOkresu, Date datum, int trvanieChoroby) {
-        ArrayList<Osoba> result = new ArrayList<>();
+    public ArrayList<PCR_Test> vypisChorychOsobPreDatumAOkres(int kodOkresu, Date datum, int trvanieChoroby) {
+        ArrayList<PCR_Test> result = new ArrayList<>();
         long trvanieMillis = (long) trvanieChoroby * 24 * 60 * 60 * 1000;
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, kodOkresu, 0, true, 0, "");
@@ -180,17 +180,13 @@ public class Model {
         PCR_TestOkresDatumWrapper wHigh = new PCR_TestOkresDatumWrapper(high);
         ArrayList<BST_Node<PCR_TestOkresDatumWrapper>> nodes = this.pcrPozitivneTestsOkresDatumAVL.rangeSearch(wLow, wHigh);
         for (BST_Node<PCR_TestOkresDatumWrapper> node : nodes) {
-            String uuid = node.getData().getTest().getUUIDOsoby();
-            AVL_Node<Osoba> osobaNode = (AVL_Node<Osoba>) this.osobyAVL.search(new Osoba("", "", new Date(), uuid));
-            if (osobaNode != null) {
-                result.add(osobaNode.getData());
-            }
+            result.add(node.getData().getTest());
         }
         return result;
     }
     //11
-    public ArrayList<Osoba> vypisChorychOsobPreDatumAOkresUsporiadaneHodnotouTestu(int kodOkresu, Date datum, int trvanieChoroby) {
-        ArrayList<Osoba> result = new ArrayList<>();
+    public ArrayList<PCR_Test> vypisChorychOsobPreDatumAOkresUsporiadaneHodnotouTestu(int kodOkresu, Date datum, int trvanieChoroby) {
+        ArrayList<PCR_Test> result = new ArrayList<>();
         long trvanieMillis = (long) trvanieChoroby * 24 * 60 * 60 * 1000;
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, kodOkresu, 0, true, 0, "");
@@ -204,17 +200,13 @@ public class Model {
             return Double.compare(hodnota2, hodnota1); // Zoradenie zostupne
         });
         for (BST_Node<PCR_TestOkresDatumWrapper> node : nodes) {
-            String uuid = node.getData().getTest().getUUIDOsoby();
-            AVL_Node<Osoba> osobaNode = (AVL_Node<Osoba>) this.osobyAVL.search(new Osoba("", "", new Date(), uuid));
-            if (osobaNode != null) {
-                result.add(osobaNode.getData());
-            }
+            result.add(node.getData().getTest());
         }
         return result;
     }
     //12
-    public ArrayList<Osoba> vypisChorychOsobPreDatumAKraj(int kodKraja, Date datum, int trvanieChoroby) {
-        ArrayList<Osoba> result = new ArrayList<>();
+    public ArrayList<PCR_Test> vypisChorychOsobPreDatumAKraj(int kodKraja, Date datum, int trvanieChoroby) {
+        ArrayList<PCR_Test> result = new ArrayList<>();
         long trvanieMillis = (long) trvanieChoroby * 24 * 60 * 60 * 1000;
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, kodKraja, true, 0, "");
@@ -223,17 +215,13 @@ public class Model {
         PCR_TestKrajDatumWrapper wHigh = new PCR_TestKrajDatumWrapper(high);
         ArrayList<BST_Node<PCR_TestKrajDatumWrapper>> nodes = this.pcrPozitivneTestsKrajDatumAVL.rangeSearch(wLow, wHigh);
         for (BST_Node<PCR_TestKrajDatumWrapper> node : nodes) {
-            String uuid = node.getData().getTest().getUUIDOsoby();
-            AVL_Node<Osoba> osobaNode = (AVL_Node<Osoba>) this.osobyAVL.search(new Osoba("", "", new Date(), uuid));
-            if (osobaNode != null) {
-                result.add(osobaNode.getData());
-            }
+            result.add(node.getData().getTest());
         }
         return result;
     }
     //13
-    public ArrayList<Osoba> vypisChorychOsobPreDatum(Date datum, int trvanieChoroby) {
-        ArrayList<Osoba> result = new ArrayList<>();
+    public ArrayList<PCR_Test> vypisChorychOsobPreDatum(Date datum, int trvanieChoroby) {
+        ArrayList<PCR_Test> result = new ArrayList<>();
         long trvanieMillis = (long) trvanieChoroby * 24 * 60 * 60 * 1000;
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, 0, true, 0, "");
@@ -242,17 +230,13 @@ public class Model {
         PCR_TestDatumWrapper wHigh = new PCR_TestDatumWrapper(high);
         ArrayList<BST_Node<PCR_TestDatumWrapper>> nodes = this.pcrPozitivneTestsDatumAVL.rangeSearch(wLow, wHigh);
         for (BST_Node<PCR_TestDatumWrapper> node : nodes) {
-            String uuid = node.getData().getTest().getUUIDOsoby();
-            AVL_Node<Osoba> osobaNode = (AVL_Node<Osoba>) this.osobyAVL.search(new Osoba("", "", new Date(), uuid));
-            if (osobaNode != null) {
-                result.add(osobaNode.getData());
-            }
+            result.add(node.getData().getTest());
         }
         return result;
     }
     //14
-    public ArrayList<Osoba> vypisOsobyPreDatumKazdyOkresSNajvyssouHodnotouTestu(Date datum, int trvanieChoroby) {
-        ArrayList<Osoba> result = new ArrayList<>();
+    public ArrayList<PCR_Test> vypisOsobyPreDatumKazdyOkresSNajvyssouHodnotouTestu(Date datum, int trvanieChoroby) {
+        ArrayList<PCR_Test> result = new ArrayList<>();
         long trvanieMillis = (long) trvanieChoroby * 24 * 60 * 60 * 1000;
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, 0, true, 0, "");
@@ -269,12 +253,8 @@ public class Model {
         for (BST_Node<PCR_TestOkresDatumWrapper> node : nodes) {
             int kodOkresu = node.getData().getTest().getKodOkresu();
             if (!processedOkresy.contains(kodOkresu)) {
-                String uuid = node.getData().getTest().getUUIDOsoby();
-                AVL_Node<Osoba> osobaNode = (AVL_Node<Osoba>) this.osobyAVL.search(new Osoba("", "", new Date(), uuid));
-                if (osobaNode != null) {
-                    result.add(osobaNode.getData());
-                    processedOkresy.add(kodOkresu);
-                }
+                result.add(node.getData().getTest());
+                processedOkresy.add(kodOkresu);
             }
         }
         return result;
@@ -418,28 +398,12 @@ public class Model {
 
     //Ulozenie do CSV
     public void ulozDoCSV(String cestaSuboru) {
-        try (java.io.FileWriter writer = new java.io.FileWriter(cestaSuboru + "_osoby.csv")) {
-            ArrayList<BST_Node<Osoba>> osobyNodes = this.osobyAVL.levelOrder();
-            for (BST_Node<Osoba> node : osobyNodes) {
-                writer.write(node.getData().toString() + "\n");
-            }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-
-        try (java.io.FileWriter writer = new java.io.FileWriter(cestaSuboru + "_testy.csv")) {
-            ArrayList<BST_Node<PCR_Test>> testNodes = this.pcrTestsAVL.levelOrder();
-            for (BST_Node<PCR_Test> node : testNodes) {
-                writer.write(node.getData().toString() + "\n");
-            }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+        this.osobyAVL.exportToFile(cestaSuboru + "_osoby.csv");
+        this.pcrTestsAVL.exportToFile(cestaSuboru + "_testy.csv");
     }
 
     //Nacitanie z CSV
     public void nacitajZCSV(String cestaSuboru) {
-        this.osobyAVL = new AVL<>();
         this.pcrTestsAVL = new AVL<>();
         this.pcrTestsDatumAVL = new AVL<>();
         this.pcrTestsDatumPracoviskoAVL = new AVL<>();
@@ -451,28 +415,7 @@ public class Model {
         this.pcrPozitivneTestsKrajDatumAVL = new AVL<>();
         this.pcrTestsKrajDatumAVL = new AVL<>();
         this.pcrTestUUIDOsobyKodTestuWrapperAVL = new AVL<>();
-        try (java.io.BufferedReader reader =
-                     new java.io.BufferedReader(new java.io.FileReader(cestaSuboru + "_osoby.csv"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty()) continue;
-
-                try {
-                    String meno = line.split(",")[0];
-                    String priezvisko = line.split(",")[1];
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                    Date datumNarodenia = sdf.parse(line.split(",")[2]);
-                    String UUID = line.split(",")[3];
-                    this.vlozOsobu(meno, priezvisko, datumNarodenia, UUID);
-                } catch (Exception e) {
-                    System.err.println("Chyba pri načítaní osoby: " + line);
-                    e.printStackTrace();
-                }
-            }
-        } catch (java.io.IOException e) {
-            System.err.println("Nepodarilo sa načítať osoby CSV: " + e.getMessage());
-        }
+        this.osobyAVL.importFromFile(cestaSuboru + "_osoby.csv", Osoba::fromCSV);
 
         try (java.io.BufferedReader reader =
                      new java.io.BufferedReader(new java.io.FileReader(cestaSuboru + "_testy.csv"))) {
@@ -521,7 +464,7 @@ public class Model {
                 Date datum = randomDate(2020, 2025);
                 int kodPCR;
                 do {
-                    kodPCR = 100000 + rnd.nextInt(900000);
+                    kodPCR = 1 + rnd.nextInt(1000000);
                 } while (pouziteKombinacieTestov.contains(kodPCR));
                 pouziteKombinacieTestov.add(kodPCR);
 
@@ -546,5 +489,12 @@ public class Model {
         cal.set(Calendar.MINUTE, new Random().nextInt(60));
         cal.set(Calendar.SECOND, new Random().nextInt(60));
         return cal.getTime();
+    }
+
+    public Osoba vyhladajOsobuPodlaUUID(String UUID) {
+        Osoba dummy = new Osoba("", "", new Date(), UUID);
+        AVL_Node<Osoba> node = new AVL_Node<>(dummy, dummy);
+        AVL_Node<Osoba> foundNode = (AVL_Node<Osoba>) this.osobyAVL.search(node.getKey());
+        return foundNode != null ? foundNode.getData() : null;
     }
 }

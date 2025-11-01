@@ -1,9 +1,16 @@
 package DS.BST;
 
 import Interface.IBST_Key;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.util.function.Function;
+
 /** Trieda reprezentujúca binárny vyhľadávací strom (BST)
  * @param <T> Typ dát implementujúci rozhranie IBST_Key
  */
@@ -275,5 +282,35 @@ public class BST<T extends IBST_Key<T>> {
             }
         }
         return result;
+    }
+
+    public void exportToFile(String path) {
+        try (FileWriter writer = new FileWriter(path)) {
+            for (BST_Node<T> node : this.levelOrder()) {
+                writer.write(node.toString() + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error while exporting BST: " + e.getMessage());
+        }
+    }
+
+    public void importFromFile(String path, Function<String, T> parser) {
+        this.root = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    T obj = parser.apply(line);
+                    this.insert(createNode(obj, obj));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error while importing BST: " + e.getMessage());
+        }
+    }
+
+    protected BST_Node<T> createNode(T key, T data) {
+        return new BST_Node<>(key, data);
     }
 }
