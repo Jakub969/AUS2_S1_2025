@@ -14,7 +14,6 @@ public class Model {
     private AVL<PCR_TestDatumWrapper> pcrTestsDatumAVL;
     private AVL<PCR_TestDatumPracoviskoWrapper> pcrTestsDatumPracoviskoAVL;
     private AVL<PCR_TestDatumWrapper> pcrPozitivneTestsDatumAVL;
-    private AVL<PCR_TestDatumWrapper> pcrNegativneTestsDatumAVL;
     private AVL<PCR_TestUUIDOsobyDatumWrapper> pcrTestUUIDOsobyDatumWrapperAVL;
     private AVL<PCR_TestOkresDatumWrapper> pcrPozitivneTestsOkresDatumAVL;
     private AVL<PCR_TestOkresDatumWrapper> pcrTestOkresDatumAVL;
@@ -31,7 +30,6 @@ public class Model {
         this.pcrTestsDatumAVL = new AVL<>();
         this.pcrTestsDatumPracoviskoAVL = new AVL<>();
         this.pcrPozitivneTestsDatumAVL = new AVL<>();
-        this.pcrNegativneTestsDatumAVL = new AVL<>();
         this.pcrTestUUIDOsobyDatumWrapperAVL = new AVL<>();
         this.pcrPozitivneTestsOkresDatumAVL = new AVL<>();
         this.pcrTestOkresDatumAVL = new AVL<>();
@@ -71,8 +69,6 @@ public class Model {
             PCR_TestDatumOkresWrapper testDatumOkresWrapper = new PCR_TestDatumOkresWrapper(test);
             this.pcrTestPozitivneDatumOkresAVL.insert(new AVL_Node<>(testDatumOkresWrapper, testDatumOkresWrapper));
             this.pcrTestsPozitivneDatumKrajAVL.insert(new AVL_Node<>(testDatumKrajWrapper, testDatumKrajWrapper));
-        } else {
-            this.pcrNegativneTestsDatumAVL.insert(new AVL_Node<>(testDatumWrapper, testDatumWrapper));
         }
         this.pcrTestUUIDOsobyDatumWrapperAVL.insert(new AVL_Node<>(testUUIDOsobyDatumWrapper, testUUIDOsobyDatumWrapper));
         this.pcrTestUUIDOsobyKodTestuWrapperAVL.insert(new AVL_Node<>(testUUIDOsobyKodTestuWrapper, testUUIDOsobyKodTestuWrapper));
@@ -379,8 +375,6 @@ public class Model {
             this.pcrTestPozitivneDatumOkresAVL.delete(this.pcrTestPozitivneDatumOkresAVL.search(testDatumOkresWrapper));
             PCR_TestDatumKrajWrapper testDatumKrajWrapper = new PCR_TestDatumKrajWrapper(test);
             this.pcrTestsPozitivneDatumKrajAVL.delete(this.pcrTestsPozitivneDatumKrajAVL.search(testDatumKrajWrapper));
-        } else {
-            this.pcrNegativneTestsDatumAVL.delete(this.pcrNegativneTestsDatumAVL.search(testDatumWrapper));
         }
         PCR_TestUUIDOsobyDatumWrapper testUUIDOsobyWrapper = new PCR_TestUUIDOsobyDatumWrapper(test);
         this.pcrTestUUIDOsobyDatumWrapperAVL.delete(this.pcrTestUUIDOsobyDatumWrapperAVL.search(testUUIDOsobyWrapper));
@@ -421,7 +415,6 @@ public class Model {
         this.pcrTestsDatumAVL = new AVL<>();
         this.pcrTestsDatumPracoviskoAVL = new AVL<>();
         this.pcrPozitivneTestsDatumAVL = new AVL<>();
-        this.pcrNegativneTestsDatumAVL = new AVL<>();
         this.pcrTestUUIDOsobyDatumWrapperAVL = new AVL<>();
         this.pcrPozitivneTestsOkresDatumAVL = new AVL<>();
         this.pcrTestOkresDatumAVL = new AVL<>();
