@@ -7,13 +7,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 public class OsobaForm {
     private final Stage stage = new Stage();
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public OsobaForm(java.util.function.Consumer<Osoba> onSave) {
         stage.setTitle("Pridanie osoby");

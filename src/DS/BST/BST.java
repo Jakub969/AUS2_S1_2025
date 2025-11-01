@@ -98,8 +98,7 @@ public class BST<T extends IBST_Key<T>> {
                 current = current.getRight_child();
             }
         }
-
-        //teraz candidate je najmenší uzol s kľúčom >= low (môže byť null)
+        //teraz candidate je najmenší uzol s kľúčom >= low
         if (candidate == null) return result;
 
         //prechádzam inorder nasledovníkov, kým sme v rozsahu
@@ -113,14 +112,19 @@ public class BST<T extends IBST_Key<T>> {
         return result;
     }
 
+    /** Nájdenie in-order nasledovníka daného vrchola
+     * @param node Vrchol, ktorého nasledovníka hľadáme
+     * @return In-order nasledovník vrchola alebo null, ak neexistuje
+     */
     private BST_Node<T> getInorderSuccessor(BST_Node<T> node) {
         if (node == null) return null;
 
-        //ak má pravé dieťa, nasledovník je najľavejší v pravom podstrome
+        //ak má pravého syna, nasledovník je najľavejší v pravom podstrome
         if (node.getRight_child() != null) {
             BST_Node<T> succ = node.getRight_child();
-            while (succ.getLeft_child() != null)
+            while (succ.getLeft_child() != null) {
                 succ = succ.getLeft_child();
+            }
             return succ;
         }
 
@@ -152,7 +156,6 @@ public class BST<T extends IBST_Key<T>> {
         //Vrchol ma dvoch potomkov
         else {
             BST_Node<T> successor = getMinNodeInRightSubtree(node.getRight_child());
-            BST_Node<T> parentOfSuccessor = successor.getParent();
             //Ak je nasledovník priamy potomok mazaneho vrcholu
             if (successor.getParent() == node) {
                 replaceParentLink(node, successor);
@@ -263,7 +266,9 @@ public class BST<T extends IBST_Key<T>> {
         }
         return current;
     }
-
+    /** Prechod stromom po úrovniach (level-order)
+     * @return Zoznam vrcholov v level-order poradí
+     */
     public ArrayList<BST_Node<T>> levelOrder() {
         ArrayList<BST_Node<T>> result = new ArrayList<>();
         if (this.root == null) {
@@ -283,7 +288,9 @@ public class BST<T extends IBST_Key<T>> {
         }
         return result;
     }
-
+    /** Export stromu do súboru
+     * @param path Cesta k súboru, do ktorého sa má strom exportovať
+     */
     public void exportToFile(String path) {
         try (FileWriter writer = new FileWriter(path)) {
             for (BST_Node<T> node : this.levelOrder()) {
@@ -293,7 +300,10 @@ public class BST<T extends IBST_Key<T>> {
             System.err.println("Error while exporting BST: " + e.getMessage());
         }
     }
-
+    /** Import stromu zo súboru
+     * @param path Cesta k súboru, z ktorého sa má strom importovať
+     * @param parser Funkcia na parsovanie riadkov súboru do objektov typu T
+     */
     public void importFromFile(String path, Function<String, T> parser) {
         this.root = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -309,7 +319,11 @@ public class BST<T extends IBST_Key<T>> {
             System.err.println("Error while importing BST: " + e.getMessage());
         }
     }
-
+    /** Vytvorenie nového vrchola stromu používa sa pri importe
+     * @param key Kľúč vrchola
+     * @param data Dáta vrchola
+     * @return Nový vrchol stromu
+     */
     protected BST_Node<T> createNode(T key, T data) {
         return new BST_Node<>(key, data);
     }

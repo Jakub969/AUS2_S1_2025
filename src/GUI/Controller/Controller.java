@@ -58,10 +58,6 @@ public class Controller {
         }
     }
 
-    /**
-     * View by malo zavolať túto metódu so stringovým názvom operácie (presne ako je vo View) a doplnkovými parametrami.
-     * Nepoužívajú sa JavaFX uzly z View priamo – View nám posiela už spracované hodnoty.
-     */
     public void onOperation(String opLabel,
                             Date datumOd, Date datumDo,
                             Integer kodOkresu, Integer kodKraja, Integer kodPracoviska,
@@ -94,7 +90,7 @@ public class Controller {
                 case 19 -> op19();
                 case 20 -> op20(kodTestu);
                 case 21 -> op21(pacientUUID);
-                default -> out.appendText("Táto operácia nie je v controllery spracovaná alebo vyžaduje špeciálny formulár.\n");
+                default -> out.appendText("Táto operácia nie je v controllery spracovaná.\n");
             }
         } catch (IllegalArgumentException iae) {
             out.appendText("Chybné alebo chýbajúce parametre: " + iae.getMessage() + "\n");
@@ -198,14 +194,14 @@ public class Controller {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
         var res = this.model.vypisOkresovUsporiadanychPoctomChorychPreDatum(datum, dni);
         var out = this.view.getOutputArea();
-        res.forEach(h -> out.appendText("Okres=" + h.getKod() + ", chorí=" + h.getPocetChorych() + "\n"));
+        res.forEach(h -> out.appendText("Okres=" + h.getKod() + ", počet chorých=" + h.getPocetChorych() + "\n"));
     }
 
     private void op16(Date datum, Integer dni) {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
         var res = this.model.vypisKrajovUsporiadanychPoctomChorychPreDatum(datum, dni);
         var out = this.view.getOutputArea();
-        res.forEach(h -> out.appendText("Kraj=" + h.getKod() + ", chorí=" + h.getPocetChorych() + "\n"));
+        res.forEach(h -> out.appendText("Kraj=" + h.getKod() + ", počet chorých=" + h.getPocetChorych() + "\n"));
     }
 
     private void op17(Integer prac, Date od, Date to) {
@@ -234,6 +230,7 @@ public class Controller {
     }
 
     private void op20(int kodPCR) {
+        require(kodPCR > 0, "Zadaj kód PCR testu.");
         this.model.vymazPCRTest(kodPCR);
         this.view.getOutputArea().appendText("PCR test s kódom " + kodPCR + " bol vymazaný.\n");
     }
@@ -244,7 +241,6 @@ public class Controller {
         this.view.getOutputArea().appendText("Osoba s UUID " + uuid + " bola vymazaná.\n");
     }
     //Pomocný výstup
-
     private void printTestySOsobami(ArrayList<PCR_Test> testy) {
         var out = this.view.getOutputArea();
         out.appendText("Počet záznamov: " + (testy == null ? 0 : testy.size()) + "\n");

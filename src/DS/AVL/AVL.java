@@ -9,18 +9,21 @@ import java.util.Stack;
  * @param <T> Typ dát implementujúci rozhranie IBST_Key
  */
 public class AVL<T extends IBST_Key<T>> extends BST<T> {
-    /** Konstruktor pre AVL strom
+    /** Vloženie vrchola do stromu
+     * @param node Vrchol na vloženie
      */
     @Override
     public void insert(BST_Node<T> node) {
         super.insert(node);
         rebalanceInsert((AVL_Node<T>) node);
     }
+    /** Rebalancovanie AVL stromu po vložení vrchola
+     * @param node Vrchol, od ktorého sa začína rebalancovanie
+     */
     private void rebalanceInsert(AVL_Node<T> node) {
         while (node != null) {
             updateHeight(node);
             int balance = getBalance(node);
-
             // 4 prípady
             if (balance > 1) {
                 //LR
@@ -55,7 +58,8 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     }
 
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
-     * @param node Vrchol, od ktorého sa začína rebalancovanie
+     * @param node Vrchol, ktorý bol odstránený
+     * @param stack Cesta k odstránenému vrcholu
      */
     private void rebalanceDelete(AVL_Node<T> node, Stack<PathItem<T>> stack) {
         PathItem<T> lastNode = stack.pop();
@@ -89,6 +93,10 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         }
     }
 
+    /** Získanie cesty k odstránenému vrcholu
+     * @param node Vrchol, ktorý bol odstránený
+     * @return Cesta k odstránenému vrcholu ako zásobník PathItem
+     */
     private Stack<PathItem<T>> getPathToDeletedNode(AVL_Node<T> node) {
         Stack<PathItem<T>> pathStack = new Stack<>();
         AVL_Node<T> current = (AVL_Node<T>) super.root;
@@ -235,16 +243,27 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         return compareLeftRightSubtreeHeights((AVL_Node<T>) node.getLeft_child()) && compareLeftRightSubtreeHeights((AVL_Node<T>) node.getRight_child());
     }
 
+    /** Vytvorenie nového vrchola AVL používa sa pri importe
+     * @param key Kľúč vrchola
+     * @param data Dáta vrchola
+     * @return Nový vrchol AVL
+     */
     @Override
     protected BST_Node<T> createNode(T key, T data) {
         return new AVL_Node<>(key, data);
     }
 }
-
+/** Pomocná trieda na uchovávanie informácií o ceste k odstránenému vrcholu
+ * @param <T> Typ dát implementujúci rozhranie IBST_Key
+ */
 class PathItem<T extends IBST_Key<T>> {
     AVL_Node<T> node;
     int oldBalance;
 
+    /** Konštruktor pre PathItem
+     * @param node Vrchol na ceste
+     * @param oldBalance Staré vyváženie vrchola
+     */
     PathItem(AVL_Node<T> node, int oldBalance) {
         this.node = node;
         this.oldBalance = oldBalance;

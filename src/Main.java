@@ -17,6 +17,7 @@ public class Main extends javafx.application.Application{
     public static void main(String[] args) {
         launch();
 
+        //Testovanie BST a AVL stromov
         /*for (int i = 0; i < 10000; i++) {
             long seed = System.currentTimeMillis();
             System.out.println("seed: " + seed);
@@ -28,6 +29,7 @@ public class Main extends javafx.application.Application{
             testerAVL.randomOperationGenerator();
         }*/
 
+        //Testovanie porovnania struktur BST, AVL a TreeMap
         /*int pocetVkladanychPrvkov = 10000000;
         int pocetMazanychPrvkov = 2000000;
         int pocetHladanychPrvkov = 5000000;
