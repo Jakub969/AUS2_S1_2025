@@ -56,7 +56,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         super.delete(node);
         rebalanceDelete((AVL_Node<T>) node, stack);
     }
-
     /** Rebalancovanie AVL stromu po vložení alebo odstranení vrchola
      * @param node Vrchol, ktorý bol odstránený
      * @param stack Cesta k odstránenému vrcholu
@@ -65,17 +64,17 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
         PathItem<T> lastNode = stack.pop();
         while (!stack.empty()) {
             PathItem<T> item = stack.pop();
-            AVL_Node<T> pathNode = item.node;
-            int oldBalance = item.oldBalance;
+            AVL_Node<T> pathNode = item.getNode();
+            int oldBalance = item.getOldBalance();
 
             if (pathNode == node) {
-                pathNode = lastNode.node;
+                pathNode = lastNode.getNode();
             }
             updateHeight(pathNode);
             int newBalance = getBalance(pathNode);
 
             if ((oldBalance == 0) && (Math.abs(newBalance) == 1)) {
-                updateHeight(lastNode.node);
+                updateHeight(lastNode.getNode());
                 break;
             }
 
@@ -100,10 +99,8 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
     private Stack<PathItem<T>> getPathToDeletedNode(AVL_Node<T> node) {
         Stack<PathItem<T>> pathStack = new Stack<>();
         AVL_Node<T> current = (AVL_Node<T>) super.root;
-
         while (current != null) {
             pathStack.push(new PathItem<>(current, getBalance(current)));
-
             int compareResult = node.getKey().compareTo(current.getKey());
             if (compareResult < 0) {
                 current = (AVL_Node<T>) current.getLeft_child();
@@ -113,11 +110,9 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
                 break;
             }
         }
-
         if (current == null) {
             return pathStack;
         }
-
         if (current.getLeft_child() == null) {
             AVL_Node<T> right = (AVL_Node<T>) current.getRight_child();
             if (right != null) {
@@ -136,7 +131,6 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
             }
             pathStack.push(new PathItem<>(successor, getBalance(successor)));
         }
-
         return pathStack;
     }
 
@@ -257,8 +251,8 @@ public class AVL<T extends IBST_Key<T>> extends BST<T> {
  * @param <T> Typ dát implementujúci rozhranie IBST_Key
  */
 class PathItem<T extends IBST_Key<T>> {
-    AVL_Node<T> node;
-    int oldBalance;
+    private final AVL_Node<T> node;
+    private final int oldBalance;
 
     /** Konštruktor pre PathItem
      * @param node Vrchol na ceste
@@ -267,5 +261,13 @@ class PathItem<T extends IBST_Key<T>> {
     PathItem(AVL_Node<T> node, int oldBalance) {
         this.node = node;
         this.oldBalance = oldBalance;
+    }
+
+    public AVL_Node<T> getNode() {
+        return this.node;
+    }
+
+    public int getOldBalance() {
+        return this.oldBalance;
     }
 }
