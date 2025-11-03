@@ -19,7 +19,11 @@ public class PCR_TestKrajDatumWrapper implements IBST_Key<PCR_TestKrajDatumWrapp
         if (object instanceof PCR_TestKrajDatumWrapper other) {
             int cmp = Integer.compare(this.test.getKodKraja(), other.getTest().getKodKraja());
             if (cmp == 0) {
-                return this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
+                int result = this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
+                if (result == 0) {
+                    return Integer.signum(this.test.getUUIDOsoby().compareTo(other.getTest().getUUIDOsoby()));
+                }
+                return result;
             }
             return cmp;
         } else {

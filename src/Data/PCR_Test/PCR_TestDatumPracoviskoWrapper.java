@@ -18,7 +18,11 @@ public class PCR_TestDatumPracoviskoWrapper implements IBST_Key<PCR_TestDatumPra
         if (object instanceof PCR_TestDatumPracoviskoWrapper other) {
             int cmp = Integer.compare(this.test.getUUIDPracoviska(), other.getTest().getUUIDPracoviska());
             if (cmp == 0) {
-                return this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
+                int result = this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
+                if (result == 0) {
+                    return Integer.signum(this.test.getUUIDOsoby().compareTo(other.getTest().getUUIDOsoby()));
+                }
+                return result;
             }
             return cmp;
         } else {

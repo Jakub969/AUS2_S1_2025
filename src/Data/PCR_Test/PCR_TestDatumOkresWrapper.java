@@ -18,7 +18,11 @@ public class PCR_TestDatumOkresWrapper implements IBST_Key<PCR_TestDatumOkresWra
         if (object instanceof PCR_TestDatumOkresWrapper other) {
             int cmp = this.test.getDatumACasTestu().compareTo(other.getTest().getDatumACasTestu());
             if (cmp == 0) {
-                return Integer.compare(this.test.getKodOkresu(), other.getTest().getKodOkresu());
+                int result = Integer.compare(this.test.getKodOkresu(), other.getTest().getKodOkresu());
+                if (result == 0) {
+                    return Integer.signum(this.test.getUUIDOsoby().compareTo(other.getTest().getUUIDOsoby()));
+                }
+                return result;
             }
             return cmp;
         } else {
