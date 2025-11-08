@@ -194,6 +194,7 @@ public class Controller {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
         var res = this.model.vypisOkresovUsporiadanychPoctomChorychPreDatum(datum, dni);
         var out = this.view.getOutputArea();
+        out.appendText("Počet záznamov: " + (res.size()) + "\n");
         res.forEach(h -> out.appendText("Okres=" + h.getKod() + ", počet chorých=" + h.getPocetChorych() + "\n"));
     }
 
@@ -201,6 +202,7 @@ public class Controller {
         require(datum != null && dni != null, "Zadaj dátum a dni.");
         var res = this.model.vypisKrajovUsporiadanychPoctomChorychPreDatum(datum, dni);
         var out = this.view.getOutputArea();
+        out.appendText("Počet záznamov: " + (res.size()) + "\n");
         res.forEach(h -> out.appendText("Kraj=" + h.getKod() + ", počet chorých=" + h.getPocetChorych() + "\n"));
     }
 

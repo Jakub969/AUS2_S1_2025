@@ -245,16 +245,16 @@ public class Model {
         Date datumDo = new Date(datum.getTime() + trvanieMillis);
         PCR_Test low = new PCR_Test(datum, "", 0, 0, 0, 0, true, 0, "");
         PCR_Test high = new PCR_Test(datumDo, "", 0, 0, Integer.MAX_VALUE, 0, true, 0, "");
-        PCR_TestOkresDatumWrapper wLow = new PCR_TestOkresDatumWrapper(low);
-        PCR_TestOkresDatumWrapper wHigh = new PCR_TestOkresDatumWrapper(high);
-        ArrayList<BST_Node<PCR_TestOkresDatumWrapper>> nodes = this.pcrPozitivneTestsOkresDatumAVL.rangeSearch(wLow, wHigh);
+        PCR_TestDatumOkresWrapper wLow = new PCR_TestDatumOkresWrapper(low);
+        PCR_TestDatumOkresWrapper wHigh = new PCR_TestDatumOkresWrapper(high);
+        ArrayList<BST_Node<PCR_TestDatumOkresWrapper>> nodes = this.pcrTestPozitivneDatumOkresAVL.rangeSearch(wLow, wHigh);
         nodes.sort((n1, n2) -> {
             double hodnota1 = n1.getData().getTest().getHodnotaTestu();
             double hodnota2 = n2.getData().getTest().getHodnotaTestu();
             return Double.compare(hodnota2, hodnota1); // Zoradenie zostupne
         });
         ArrayList<Integer> processedOkresy = new ArrayList<>();
-        for (BST_Node<PCR_TestOkresDatumWrapper> node : nodes) {
+        for (BST_Node<PCR_TestDatumOkresWrapper> node : nodes) {
             int kodOkresu = node.getData().getTest().getKodOkresu();
             if (!processedOkresy.contains(kodOkresu)) {
                 result.add(node.getData().getTest());
